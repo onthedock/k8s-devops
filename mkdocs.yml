@@ -2,6 +2,8 @@ site_name: Kubernetes DevOps
 
 nav:
   - Recomendaciones:      index.md
+  - k3d:
+      Instalación:        k3d/instalacion.md
   - Mkdocs:               mkdocs/basic-setup.md
   - Referencias:          referencias.md
 
