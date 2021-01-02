@@ -3,6 +3,7 @@ site_name: Kubernetes DevOps
 nav:
   - Recomendaciones:      index.md
   - Mkdocs:               mkdocs/basic-setup.md
+  - Referencias:          referencias.md
 
 theme:
   name: 'material'
