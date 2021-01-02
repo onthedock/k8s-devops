@@ -1,5 +1,8 @@
 site_name: Kubernetes DevOps
 
+nav:
+  - Home:     index.md
+  - Mkdocs:   mkdocs/basic-setup.md
 
 theme:
   name: 'material'
