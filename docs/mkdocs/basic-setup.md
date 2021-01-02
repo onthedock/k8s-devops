@@ -27,7 +27,7 @@ docs/
 ### Configuración mínima
 
 Para minimizar el mantenimiento de la documentación, realizo la menor configuración posible de MkDocs. También limito todo lo posible el uso de extensiones.
- 
+
 ```yaml
 nav:
   ...
