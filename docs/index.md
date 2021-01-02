@@ -7,7 +7,7 @@ El nombre del *namespace* no es relevante, aunque en general coincide con el nom
 
 ## Un fichero YAML unificado
 
-Todos los recursos necesarios para el despliegue de la herramienta se definen en un único fichero YAML.
+Todos los recursos necesarios para el despliegue de la herramienta se definen en un único fichero YAML (en la carpeta `deploy/`).
 
 La definición de los recursos en el fichero se separa mediante `---`, como indica la especificación del formato [YAML](https://yaml.org/).
 
