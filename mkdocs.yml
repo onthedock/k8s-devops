@@ -1,0 +1,16 @@
+site_name: Kubernetes DevOps
+
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'blue'
+    accent: 'red'
+  features:
+    - navigation.tabs
+
+markdown_extensions:
+  - markdown.extensions.codehilite:
+      guess_lang: false
+      linenums: true
+  - markdown.extensions.footnotes
