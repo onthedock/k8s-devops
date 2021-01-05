@@ -6,6 +6,7 @@ nav:
       Instalación:                  k3d/instalacion.md
   - ArgoCD:
       Despliegue:                   argocd/argocd.md
+      Acceso a la consola:          argocd/acceso-consola.md
   - Git:
       Deshacer último commit local: git/deshacer-ultimo-commit-local.md
   - Mkdocs:                         mkdocs/basic-setup.md
