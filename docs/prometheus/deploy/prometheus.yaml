@@ -27,3 +27,9 @@ rules:
         - get
         - list
         - watch
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+    name: prometheus
+    namespace: monitoring

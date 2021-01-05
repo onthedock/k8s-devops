@@ -56,6 +56,36 @@ rules:
         - watch
 ```
 
+### *Service account*
+
+Creamos una *service account* a la que aplicar el rol creado en el apartado anterior:
+
+```yaml
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+    name: prometheus
+    namespace: monitoring
+```
+
+```bash
+$ kubectl -n monitoring apply -f docs/prometheus/deploy/prometheus.yaml 
+namespace/monitoring unchanged
+Warning: rbac.authorization.k8s.io/v1beta1 ClusterRole is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRole
+clusterrole.rbac.authorization.k8s.io/prometheus unchanged
+serviceaccount/prometheus created
+```
+
+Comprobamos que se ha creado correctamente:
+
+```bash
+$ kubectl -n monitoring get sa
+NAME         SECRETS   AGE
+default      1         25m
+prometheus   1         3m19s
+```
+
 ## Referencias
 
 - [How To Monitor Kubernetes With Prometheus](https://phoenixnap.com/kb/prometheus-kubernetes-monitoring), 24/02/2020.
