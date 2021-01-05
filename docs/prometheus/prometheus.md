@@ -85,6 +85,53 @@ default      1         25m
 prometheus   1         3m19s
 ```
 
+### *ClusterRoleBinding*
+
+Aunque hemos creado el *ClusterRole* (que define los permisoso) y la *ServiceAccount*, no están relacionados de ninguna forma.
+
+Para ello necesitamos un *ClusterRoleBinding*:
+
+```yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: monitoring
+```
+
+Aplicamos el fichero para crearlo:
+
+```bash
+$ kubectl -n monitoring apply -f docs/prometheus/deploy/prometheus.yaml 
+namespace/monitoring unchanged
+clusterrole.rbac.authorization.k8s.io/prometheus unchanged
+serviceaccount/prometheus unchanged
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+```
+
+Validamos que se ha creado correctamente:
+
+```bash
+$ kubectl describe clusterrolebinding prometheus
+Name:         prometheus
+Labels:       <none>
+Annotations:  <none>
+Role:
+  Kind:  ClusterRole
+  Name:  prometheus
+Subjects:
+  Kind            Name        Namespace
+  ----            ----        ---------
+  ServiceAccount  prometheus  monitoring
+```
+
 ## Referencias
 
 - [How To Monitor Kubernetes With Prometheus](https://phoenixnap.com/kb/prometheus-kubernetes-monitoring), 24/02/2020.
