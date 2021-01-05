@@ -270,6 +270,67 @@ clusterrolebinding.rbac.authorization.k8s.io/prometheus unchanged
 configmap/prometheus-config created
 ```
 
+## Despliegue de Prometheus
+
+Ahora que tenemos la configuración definida y guardada en un *configMap*, desplegamos Prometheus usando un *deployment*:
+
+```yaml
+---
+kind: Deployment
+apiVersion: apps/v1beta2
+metadata:
+  name: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: prometheus
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.23.0 # Latest stable release (the article uses 2.1.0)
+          ports:
+            - name: default
+              containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+```
+
+Pero tras desplegar el *deployment*, el *pod* tiene algún problema y no arranca:
+
+```bash
+$ kubectl -n monitoring get deploy
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+prometheus   0/1     1            0           5m23s
+$ kubectl -n monitoring get pods
+NAME                          READY   STATUS             RESTARTS   AGE
+prometheus-57cb865687-qv8j8   0/1     CrashLoopBackOff   5          6m5s
+$ kubectl -n monitoring describe pod prometheus-57cb865687-qv8j8
+...
+Events:
+  Type     Reason     Age                   From               Message
+  ----     ------     ----                  ----               -------
+  Normal   Scheduled  6m23s                 default-scheduler  Successfully assigned monitoring/prometheus-57cb865687-qv8j8 to k3d-devcluster-server-0
+  Normal   Pulling    6m22s                 kubelet            Pulling image "prom/prometheus:v2.23.0"
+  Normal   Pulled     6m4s                  kubelet            Successfully pulled image "prom/prometheus:v2.23.0" in 18.932546631s
+  Normal   Pulled     4m31s (x4 over 6m2s)  kubelet            Container image "prom/prometheus:v2.23.0" already present on machine
+  Normal   Created    4m31s (x5 over 6m3s)  kubelet            Created container prometheus
+  Normal   Started    4m30s (x5 over 6m3s)  kubelet            Started container prometheus
+  Warning  BackOff    72s (x24 over 6m1s)   kubelet            Back-off restarting failed container
+```
+
+:(
+
 ## Referencias
 
 - [How To Monitor Kubernetes With Prometheus](https://phoenixnap.com/kb/prometheus-kubernetes-monitoring), 24/02/2020.
