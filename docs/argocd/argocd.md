@@ -38,6 +38,8 @@ Descargamos el fichero como referencia y revisamos las versiones de las diferent
 * argoproj/argocd:v1.8.1 [Argo CD](https://argoproj.github.io/argo-cd/) - A declarative, GitOps continuous delivery tool for Kubernetes
 * redis:5.0.10-alpine [Redis](https://redis.io/) - Open source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker
 
+Modificamos el parámetro *imagePullPolicy* para cambiarlo a *IfNotPresent* (en vez de *Always*).
+
 Añdimos el contenido del fichero de instalación de ArgoCD al fichero despliegue (para tener unificada la creación del *namespace* y la del despliegue de la herramienta):
 
 ```bash
@@ -112,3 +114,98 @@ Para exponer la consola usando un *Ingress*, la documentación de Argo CD propor
 
 > The API server should be run with TLS disabled. Edit the argocd-server deployment to add the --insecure flag to the argocd-server command.
 
+Es necesario modificar el *deployment* del *argocd-server* para incluir `--insecure` al comando ejecutado:
+
+```yaml
+...
+      containers:
+      - command:
+        - argocd-server
+        - --staticassets
+        - /shared/app
+        - --insecure # Required to expose Argo CD console using Traefik 2.2 Ingress (https://argoproj.github.io/argo-cd/operator-manual/ingress/#traefik-v22)
+        image: argoproj/argocd:v1.8.1
+        imagePullPolicy: IfNotPresent
+        name: argocd-server
+...
+```
+
+Podemos configurar Traefik usando un *ingress* o mediante el CRD *IngressRoute* proporcionado por Traefik.
+
+En nuestro caso, usamos el primero:
+
+```yaml
+---
+apiVersion: networking.k8s.io/v1 # Kubernetes 1.19+
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernets.io/ingress.class: traefik
+  name: argocd
+spec:
+  rules:
+  - host: "argocd.dev.lab"
+    http:
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: argocd-server
+              port:
+                number: 80
+```
+
+Al aplicar los cambios introducidos en el fichero y aplicarlos:
+
+```bash
+ k -n argocd apply -f argocd.yaml 
+namespace/argocd unchanged
+Warning: apiextensions.k8s.io/v1beta1 CustomResourceDefinition is deprecated in v1.16+, unavailable in v1.22+; use apiextensions.k8s.io/v1 CustomResourceDefinition
+customresourcedefinition.apiextensions.k8s.io/applications.argoproj.io unchanged
+customresourcedefinition.apiextensions.k8s.io/appprojects.argoproj.io unchanged
+serviceaccount/argocd-application-controller unchanged
+serviceaccount/argocd-dex-server unchanged
+serviceaccount/argocd-redis unchanged
+serviceaccount/argocd-server unchanged
+role.rbac.authorization.k8s.io/argocd-application-controller unchanged
+role.rbac.authorization.k8s.io/argocd-dex-server unchanged
+role.rbac.authorization.k8s.io/argocd-redis unchanged
+role.rbac.authorization.k8s.io/argocd-server unchanged
+clusterrole.rbac.authorization.k8s.io/argocd-application-controller unchanged
+clusterrole.rbac.authorization.k8s.io/argocd-server unchanged
+rolebinding.rbac.authorization.k8s.io/argocd-application-controller unchanged
+rolebinding.rbac.authorization.k8s.io/argocd-dex-server unchanged
+rolebinding.rbac.authorization.k8s.io/argocd-redis unchanged
+rolebinding.rbac.authorization.k8s.io/argocd-server unchanged
+clusterrolebinding.rbac.authorization.k8s.io/argocd-application-controller unchanged
+clusterrolebinding.rbac.authorization.k8s.io/argocd-server unchanged
+configmap/argocd-cm unchanged
+configmap/argocd-gpg-keys-cm unchanged
+configmap/argocd-rbac-cm unchanged
+configmap/argocd-ssh-known-hosts-cm unchanged
+configmap/argocd-tls-certs-cm configured
+secret/argocd-secret unchanged
+service/argocd-dex-server unchanged
+service/argocd-metrics unchanged
+service/argocd-redis unchanged
+service/argocd-repo-server unchanged
+service/argocd-server unchanged
+service/argocd-server-metrics unchanged
+deployment.apps/argocd-dex-server unchanged
+deployment.apps/argocd-redis unchanged
+deployment.apps/argocd-repo-server unchanged
+deployment.apps/argocd-server configured
+statefulset.apps/argocd-application-controller unchanged
+ingress.networking.k8s.io/argocd created
+```
+
+> Puede ser necesario realizar un *rollout restart* del *deployment* `argocd-server`: `kubectl -n argocd rollout restart deploy argocd-server`.
+
+En resumen, se ha modificado:
+
+* La definición del *deployment* `argocd-server` para incluir el *flag* `--insecure`
+* La creación del recurso *Ingress*
+
+Tras estas modificaciones, podemos acceder a la consola de Argo CD a través de `http://argocd.dev.lab`.

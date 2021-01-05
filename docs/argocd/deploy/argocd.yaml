@@ -2629,6 +2629,7 @@ spec:
         - argocd-server
         - --staticassets
         - /shared/app
+        - --insecure
         image: argoproj/argocd:v1.8.1
         imagePullPolicy: IfNotPresent
         name: argocd-server
@@ -2716,3 +2717,23 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
       serviceAccountName: argocd-application-controller
+---
+apiVersion: networking.k8s.io/v1 # Kubernetes 1.19+
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernets.io/ingress.class: traefik
+  name: argocd
+spec:
+  rules:
+  - host: "argocd.dev.lab"
+    http:
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: argocd-server
+              port:
+                number: 80

@@ -1,15 +1,15 @@
 site_name: Kubernetes DevOps
 
 nav:
-  - Recomendaciones:      index.md
+  - Recomendaciones:                index.md
   - k3d:
-      Instalación:        k3d/instalacion.md
+      Instalación:                  k3d/instalacion.md
   - ArgoCD:
-      Deploy:             argocd/argocd.md
+      Despliegue:                   argocd/argocd.md
   - Git:
       Deshacer último commit local: git/deshacer-ultimo-commit-local.md
-  - Mkdocs:               mkdocs/basic-setup.md
-  - Referencias:          referencias.md
+  - Mkdocs:                         mkdocs/basic-setup.md
+  - Referencias:                    referencias.md
 
 theme:
   name: 'material'
