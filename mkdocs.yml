@@ -4,6 +4,8 @@ nav:
   - Recomendaciones:      index.md
   - k3d:
       Instalación:        k3d/instalacion.md
+  - ArgoCD:
+      Deploy:             argocd/argocd.md
   - Git:
       Deshacer último commit local: git/deshacer-ultimo-commit-local.md
   - Mkdocs:               mkdocs/basic-setup.md
