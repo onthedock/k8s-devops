@@ -21,6 +21,41 @@ $ kubectl apply -f prometheus.yaml
 namespace/monitoring created
 ```
 
+## Permisos para Prometheus
+
+Los espacios de nombres se han diseñado para limitar los permisos de los diferentes roles, por lo que si queremos obtener información de forma global en el clúster, debemos proporcionar a Prometheus acceso a todos los recursos en el clúster.
+
+### Rol global (*clusterrole*)
+
+Un fichero básico que proporciona acceso global al clúster es:
+
+```yaml
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+    name: prometheus
+rules:
+    - apiGroups: [""]
+      resources:
+        - nodes
+        - services
+        - endpoints
+        - pods
+      verbs:
+        - get
+        - list
+        - watch
+    - apiGroups:
+        - extensions
+      resources:
+        - ingresses
+      verbs:
+        - get
+        - list
+        - watch
+```
+
 ## Referencias
 
 - [How To Monitor Kubernetes With Prometheus](https://phoenixnap.com/kb/prometheus-kubernetes-monitoring), 24/02/2020.
