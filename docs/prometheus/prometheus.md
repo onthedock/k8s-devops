@@ -32,7 +32,7 @@ Un fichero básico que proporciona acceso global al clúster es:
 ```yaml
 ---
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
     name: prometheus
 rules:
@@ -72,7 +72,6 @@ metadata:
 ```bash
 $ kubectl -n monitoring apply -f docs/prometheus/deploy/prometheus.yaml 
 namespace/monitoring unchanged
-Warning: rbac.authorization.k8s.io/v1beta1 ClusterRole is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRole
 clusterrole.rbac.authorization.k8s.io/prometheus unchanged
 serviceaccount/prometheus created
 ```
