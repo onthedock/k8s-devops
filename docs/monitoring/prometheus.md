@@ -24,3 +24,10 @@ De esta forma, la configuración de Prometheus consiste en identificar de qué *
 
 Así, cuando desplegamos un microservicio, podemos etiquetarlo para indicar que debe ser monitorizado por un *service monitor* y por una determinada instancia de Prometheus que se va a encargar de monitorizarlo. De esta forma podemos gestionar la monitorización de un gran número de microservicios de forma sencilla.
 
+## Despliegue
+
+Código para Kubernetes 1.18.4 en Referencia: [Github](https://github.com/marcel-dempers/docker-development-youtube-series/tree/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-operator) por Marcel Dempers. El código está basado en la documentación sobre el [operador de Prometheus](https://coreos.com/operators/prometheus/docs/latest/user-guides/getting-started.html) en la web de CoreOS.
+
+El repositorio sigue activo en GitHub: [prometheus-operator/prometheus-operator](https://github.com/prometheus-operator/prometheus-operator).
+
+> El autor, Marcel Dempers dice que no le gustan las *Helm Charts* porque tienen a estar *over engineered* y que la guía de instalación le permite conocer qué es lo que despliega y desplegar únicamente lo que es necesario (por lo que esta guía sólo contiene los YAMLs mínimos para que Prometheus funcione).
