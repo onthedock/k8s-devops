@@ -3,10 +3,12 @@ site_name: Kubernetes DevOps
 nav:
   - Recomendaciones:                index.md
   - k3d:
-      Instalación:                  k3d/instalacion.md
+    Instalación:                  k3d/instalacion.md
   - ArgoCD:
-      Despliegue:                   argocd/argocd.md
-      Acceso a la consola:          argocd/acceso-consola.md
+    Despliegue:                   argocd/argocd.md
+    Acceso a la consola:          argocd/acceso-consola.md
+  - Monitoring:
+    Prometheus:                   monitoring/prometheus.md
   - Git:
       Deshacer último commit local: git/deshacer-ultimo-commit-local.md
   - Mkdocs:                         mkdocs/basic-setup.md
