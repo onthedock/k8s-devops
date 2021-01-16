@@ -255,3 +255,21 @@ Podemos usar *node affinity* para desplegar Prometheus en nodos específicos, po
 Si queremos desplegar un Prometheus *stand-alone*, lo que haríamos es crear un CR de tipo Prometheus, a desplegar en el *namespace* de destino. También tendríamos que desplegar un *service monitor*, indicando de qué *namespace* queremos obtener métricas, definiendo un selector para identificar qué queremos obtener y cómo. Para ello, nuestra aplicación debe exponer las métricas en los endpoints indicados y estar etiquetada convenientemente para que Prometheus pueda identificarla aplicación... Como en mi caso no tengo la aplicación de demo desplegada en el clúster, no tiene mucho sentido seguir en esta línea.
 
 Revisaré si en otros vídeos del autor se indica cómo desplegar Prometheus para monitorizar el propio clúster de Kubernetes (API server, etc) y así obtener datos sin necesidad de desplegar aplicaciones de test.
+
+## Node-exporter
+
+Queremos monitorizar CPU, RAM, etc y otras métricas de los nodos Linux que forman parte del clúster.
+
+Tenemos el operador de Prometheus desplegado en el clúster y vamos a desplegar una instancia en el *namespace* `monitoring`. Vamos a desplegar un *DaemonSet* llamado *node-exporter*, de manera que se despliega un pod por nodo del clúster. Este *pod* recoge las métricas de los nodos (sin usar la API de Kubernetes).
+
+El siguiente paso es enlazar Prometheuse con node-exporter. Para ello creamos un *service monitori* que es lo que obtendrá las métricas desde los pods de *node-exporter*.
+
+En primer lugar, desplegamos el operador de Prometheus (cosa que ya hemos descrito más arriba).
+
+Una vez desplegado, tenemos a nuestra disposición dos nuevos CRDs de tipo `Prometheus` y `ServiceMonitor`.
+
+> El código de esta sección se encuentra en [.../1.18.4/prometheus-cluster-monitoring/](https://github.com/marcel-dempers/docker-development-youtube-series/tree/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-cluster-monitoring)
+
+El autor aplica toda la carpeta:
+
+> La creación de los objetos definidos por CRDs del operador de Prometheuse falla. La API de Kubernetes no los reconoce; mediante `kubectl api-resources` comprobamos que no se han creado al desplegar el operador de Prometheus.
