@@ -1,6 +1,6 @@
 # Monitorización con el operador de Prometheus
 
-Referencia: [Introduction to the Prometheus Operator on Kubernetes](https://youtu.be/LQpmeb7idt8)
+Referencia: [Introduction to the Prometheus Operator on Kubernetes](https://youtu.be/LQpmeb7idt8) por Marcel Dempers en YouTube, 25/12/2019.
 
 La manera tradicional de desplegar Prometheus es crear un *namespace*, desplegar Prometheus mediante un *deployment*, que desplega un *pod* de Prometheus (porque especificamos `1` como número de réplicas).
 
@@ -31,3 +31,227 @@ Código para Kubernetes 1.18.4 en Referencia: [Github](https://github.com/marcel
 El repositorio sigue activo en GitHub: [prometheus-operator/prometheus-operator](https://github.com/prometheus-operator/prometheus-operator).
 
 > El autor, Marcel Dempers dice que no le gustan las *Helm Charts* porque tienen a estar *over engineered* y que la guía de instalación le permite conocer qué es lo que despliega y desplegar únicamente lo que es necesario (por lo que esta guía sólo contiene los YAMLs mínimos para que Prometheus funcione).
+
+### *Namespace* `monitoring` y resto de recursos
+
+En primer lugar, creamos el *namespace* `monitoring`; si usamos un *namespace* diferente, tenemos que modificarlo en el fichero de definición de los *Role Binding*.
+
+Creamos el fichero de definición del *namespace* y lo creamos:
+
+```yaml
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: monitoring
+```
+
+A continuación aplica todos los ficheros YAML de la carpeta [`prometheus-operator`](https://github.com/marcel-dempers/docker-development-youtube-series/tree/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-operator) del repositorio de GitHub.
+
+#### *ClusterRoleBinding*
+
+```yaml
+---
+# https://github.com/marcel-dempers/docker-development-youtube-series/blob/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-operator/cluster-role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: controller         # No aparece en la documentación de CoreOS
+    app.kubernetes.io/name: prometheus-operator     # No aparece en la documentación de CoreOS
+    app.kubernetes.io/version: v0.40.0              # No aparece en la documentación de CoreOS
+  name: prometheus-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-operator
+subjects:
+- kind: ServiceAccount
+  name: prometheus-operator
+  namespace: monitoring
+```
+
+#### *ClusterRole*
+
+```yaml
+---
+# https://github.com/marcel-dempers/docker-development-youtube-series/blob/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-operator/cluster-role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: controller         # No aparece en la documentación de CoreOS
+    app.kubernetes.io/name: prometheus-operator     # No aparece en la documentación de CoreOS
+    app.kubernetes.io/version: v0.40.0              # No aparece en la documentación de CoreOS
+  name: prometheus-operator
+rules:
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagers
+  - alertmanagers/finalizers
+  - prometheuses
+  - prometheuses/finalizers
+  - thanosrulers
+  - thanosrulers/finalizers
+  - servicemonitors
+  - podmonitors
+  - prometheusrules
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - statefulsets
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - secrets
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - list
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - services/finalizers
+  - endpoints
+  verbs:
+  - get
+  - create
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+```
+
+#### *ServiceAccount*
+
+```yaml
+---
+# https://github.com/marcel-dempers/docker-development-youtube-series/blob/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-operator/service-account.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: controller       # No aparece en la documentación de CoreOS
+    app.kubernetes.io/name: prometheus-operator   # No aparece en la documentación de CoreOS
+    app.kubernetes.io/version: v0.40.0            # No aparece en la documentación de CoreOS
+  name: prometheus-operator
+```
+
+#### *Deployment*
+
+```yaml
+---
+# https://github.com/marcel-dempers/docker-development-youtube-series/blob/master/monitoring/prometheus/kubernetes/1.18.4/prometheus-operator/deployment.yaml
+apiVersion: apps/v1                    # En la documentación de CoreOs extension/v1beta1 (más antigua)
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/name: prometheus-operator
+    app.kubernetes.io/version: v0.40.0
+  name: prometheus-operator
+spec:
+  replicas: 1
+    selector:
+      matchLabels:
+        app.kubernetes.io/component: controller
+        app.kubernetes.io/name: prometheus-operator
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/component: controller
+          app.kubernetes.io/name: prometheus-operator
+          app.kubernetes.io/version: v0.40.0
+      spec:
+        containers:
+        - args:
+          - --kubelet-service=kube-system/kubelet
+          - --logtostderr=true
+          - --config-reloader-image=jimmidyson/configmap-reload:v0.3.0
+          - --prometheus-config-reloader=quay.io/coreos/prometheus-config-reloader:v0.40.0
+          image: quay.io/coreos/prometheus-operator:v0.40.0
+          name: prometheus-operator
+          ports:
+          - containerPort: 8080
+            name: http
+          # resources:
+          #   limits:
+          #     cpu: 200m
+          #     memory: 200Mi
+          #   requests:
+          #     cpu: 100m
+          #     memory: 100Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+        - args:
+          - --logtostderr
+          - --secure-listen-address=:8443
+          - --tls-cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256
+          - --upstream=http://127.0.0.1:8080/
+          image: quay.io/coreos/kube-rbac-proxy:v0.4.1
+          name: kube-rbac-proxy
+          ports:
+          - containerPort: 8443
+            name: https
+          securityContext:
+            runAsUser: 65534
+        nodeSelector:
+          beta.kubernetes.io/os: linux
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 65534
+        serviceAccountName: prometheus-operator
+```
+
+Aplicamos el fichero de definición del operador de Prometheus, y tras unos instantes, comprobamos que el *pod* del operador se encuentra activo y corriendo con normalidad:
+
+```bash
+$ kubectl get pods -n monitoring
+NAME                                  READY   STATUS    RESTARTS   AGE
+prometheus-operator-f546c795d-t96cn   2/2     Running   3          2d23h
+```
+
+Una vez tenemos el operador desplegado, podemos decidir cómo queremos organizar las diferentes instancias de Prometheus en el clúster: una por equipo y una para monitorizar el clúster, un Prometheus específico para la API de Kuberntes, etc...
+
+Podemos usar *node affinity* para desplegar Prometheus en nodos específicos, por ejemplo, ya que puede llegar a ser una aplicación con grandes necesidades de memoria y nos puede interesar "aislarlo" en nodos específicos, etc.
+
+Si queremos desplegar un Prometheus *stand-alone*, lo que haríamos es crear un CR de tipo Prometheus, a desplegar en el *namespace* de destino. También tendríamos que desplegar un *service monitor*, indicando de qué *namespace* queremos obtener métricas, definiendo un selector para identificar qué queremos obtener y cómo. Para ello, nuestra aplicación debe exponer las métricas en los endpoints indicados y estar etiquetada convenientemente para que Prometheus pueda identificarla aplicación... Como en mi caso no tengo la aplicación de demo desplegada en el clúster, no tiene mucho sentido seguir en esta línea.
+
+Revisaré si en otros vídeos del autor se indica cómo desplegar Prometheus para monitorizar el propio clúster de Kubernetes (API server, etc) y así obtener datos sin necesidad de desplegar aplicaciones de test.
