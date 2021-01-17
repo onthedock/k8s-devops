@@ -50,11 +50,13 @@ Como vemos en el apartado de los servicios, todos son del tipo `ClusterIP`, por 
 
 ## Otros recursos creados
 
-Además de los recursos listados mediante `kubectl get all`, tenemos dos *configMap* y *tokens* asociados a las *serviceAccount* de los diferentes componentes.
+Además de los recursos listados mediante `kubectl get all`, tenemos *configMap*s, *secrets*, *service accounts* y *cluster role bindings*...
 
-### *configMap*s
+Los *secrets* en el *namespace* `monitoring` contienen los *tokens* usados por las *service accounts* de las aplicaciones desplegadas por la *Helm Chart*. Como las aplicaciones de monitorización tienen que acceder a recursos en cualquier *namespace*, los permisos necesarios se encuentra en los ficheros de definición de los *cluster roles*.
 
-#### *configMap* `prometheus-server`
+Todos estos recursos adicionales se denominan `prometheus-`, seguido por el nombre del componente al que hacen referencia.
+
+### *configMap* `prometheus-server`
 
 Revisando el contenido del *configMap* `cm/prometheus-server` mediante `kubectl -n monitoring describe cm/prometheus-server` vemos que contiene el fichero de configuración de Prometheus:
 
@@ -116,7 +118,7 @@ Revisando los *jobs* podemos hacernos una idea de los diferentes *targets* inclu
 
 Puedes consultar los detalles del fichero de [configuración de Prometheus](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) en la web de la documentación oficial de Prometheus.
 
-#### *configMap* `prometheus-alertmanager`
+### *configMap* `prometheus-alertmanager`
 
 También podemos examinar el *configMap* que contiene la configuración de **Alert Manager**.
 
