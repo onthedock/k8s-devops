@@ -36,13 +36,12 @@ replicaset.apps/prometheus-alertmanager-58b5b9d6d8        1         1         1 
 replicaset.apps/prometheus-server-6b687c4b87              1         1         1       7h51m
 ```
 
-## Pods
+## Componentes desplegados
 
-Como vemos, tenemos cinco pod desplegados:
+Como vemos, tenemos cinco componentes desplegados:
 
-* *node-exporter* es un *exporter* de Prometheus para las métricas de los nodos del clúster. El  *node exporter* se encarga de proporcionar las métricas relativas a los nodos del clúster en el formato requerido por Prometheus en el *endpoint* `/metrics`.
+* *node-exporter* es un *exporter* de Prometheus para las métricas de los nodos del clúster. El  *node exporter* se encarga de proporcionar las métricas relativas a los nodos del clúster en el formato requerido por Prometheus en el *endpoint* `/metrics`. El *node-exporter* se despliega como un *daemon-set* de manera que haya una réplica en cada nodo *worker*.
 * *kube-state-metrics* se encarga de obtener las métricas de la API de Kubernetes.
 * *push-gateway* es un elemento de la arquitectura de Prometheus que permite recoger métricas de *jobs* y otros procesos de corta duración. El *job* en este caso puede enviar usando *push* las métricas al *gateway* en el momento que se ejecuta. El *push-gateway* almacena las métricas hasta que son recogidas por el proceso de *scraping* de Prometheus.
 * *alertmanager* proporciona la funcionalidad para enviar alertas cuando alguna de las métricas definidas supera un determinado umbral.
 * *server* este es el servidor de Prometheus en sí.
-
