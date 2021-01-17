@@ -45,3 +45,105 @@ Como vemos, tenemos cinco componentes desplegados:
 * *push-gateway* es un elemento de la arquitectura de Prometheus que permite recoger métricas de *jobs* y otros procesos de corta duración. El *job* en este caso puede enviar usando *push* las métricas al *gateway* en el momento que se ejecuta. El *push-gateway* almacena las métricas hasta que son recogidas por el proceso de *scraping* de Prometheus.
 * *alertmanager* proporciona la funcionalidad para enviar alertas cuando alguna de las métricas definidas supera un determinado umbral.
 * *server* este es el servidor de Prometheus en sí.
+
+Como vemos en el apartado de los servicios, todos son del tipo `ClusterIP`, por lo que los componentes sólo son accesibles internamente dentro del clúster.
+
+## Otros recursos creados
+
+Además de los recursos listados mediante `kubectl get all`, tenemos dos *configMap* y *tokens* asociados a las *serviceAccount* de los diferentes componentes.
+
+### *configMap*s
+
+#### *configMap* `prometheus-server`
+
+Revisando el contenido del *configMap* `cm/prometheus-server` mediante `kubectl -n monitoring describe cm/prometheus-server` vemos que contiene el fichero de configuración de Prometheus:
+
+```yaml
+Name:         prometheus-server
+Namespace:    monitoring
+Labels:       app=prometheus
+              app.kubernetes.io/managed-by=Helm
+              chart=prometheus-13.2.1
+              component=server
+              heritage=Helm
+              release=prometheus
+Annotations:  meta.helm.sh/release-name: prometheus
+              meta.helm.sh/release-namespace: monitoring
+
+Data
+====
+alerting_rules.yml:
+----
+{}
+
+alerts:
+----
+{}
+
+prometheus.yml:
+----
+global:
+  evaluation_interval: 1m
+  scrape_interval: 1m
+  scrape_timeout: 10s
+rule_files:
+- /etc/config/recording_rules.yml
+- /etc/config/alerting_rules.yml
+- /etc/config/rules
+- /etc/config/alerts
+scrape_configs:
+- job_name: prometheus
+  static_configs:
+  - targets:
+    - localhost:9090
+...
+
+recording_rules.yml:
+----
+{}
+
+rules:
+----
+{}
+
+Events:  <none>
+```
+
+Este fichero contiene información global sobre la frecuencia de *scraping* de métricas de los *targets* (por defecto).
+A continuación tenemos la ubicación de los ficheros de reglas (y alertas), seguido por la configuración de los diferentes *jobs* de obtención de métricas (para cada *target*).
+
+Revisando los *jobs* podemos hacernos una idea de los diferentes *targets* incluidos en el despliegue por defecto vía Helm de Prometheus: `prometheus`, `kubernetes-apiservers`, `kubernetes-nodes`, etc...
+
+Puedes consultar los detalles del fichero de [configuración de Prometheus](https://prometheus.io/docs/prometheus/latest/configuration/configuration/) en la web de la documentación oficial de Prometheus.
+
+#### *configMap* `prometheus-alertmanager`
+
+También podemos examinar el *configMap* que contiene la configuración de **Alert Manager**.
+
+```yaml
+Name:         prometheus-alertmanager
+Namespace:    monitoring
+Labels:       app=prometheus
+              app.kubernetes.io/managed-by=Helm
+              chart=prometheus-13.2.1
+              component=alertmanager
+              heritage=Helm
+              release=prometheus
+Annotations:  meta.helm.sh/release-name: prometheus
+              meta.helm.sh/release-namespace: monitoring
+
+Data
+====
+alertmanager.yml:
+----
+global: {}
+receivers:
+- name: default-receiver
+route:
+  group_interval: 5m
+  group_wait: 10s
+  receiver: default-receiver
+  repeat_interval: 3h
+
+Events:  <none>
+```
