@@ -125,6 +125,17 @@ Forwarding from [::1]:3000 -> 3000
 
 A través del navegador podemos acceder a la página de *login* de Grafana a través de [http://localhost:3000](http://localhost:3000).
 
+### Validación del *datasource* de Prometheus
+
+Manteniendo activa la conexión al *pod* de Grafana mediante el *port-forward*, accedemos a Grafana con las credenciales por defecto (usuario `admin`, *password* `admin`).
+
+Pulsando en el panel lateral, sobre el icono del engranaje (*Configuration*), seleccionamos *Data Sources*.
+
+En el panel principal, debería mostrarse el *datasource* configurado a través del *configMap*.
+
+Al pulsar sobre el *datasource* de Prometheus, se muestra la configuración del *datasource*. En la parte inferior, pulsa el botón *Save & Test* para validar que Grafana puede obtener datos de Prometheus.
+
+
 ## Referencias
 
 - [How to Setup Grafana on Kubernetes](https://devopscube.com/setup-grafana-kubernetes/) por Bibin Wilson, 4/11/2019.
