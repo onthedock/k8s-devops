@@ -137,6 +137,29 @@ En el panel principal, debería mostrarse el *datasource* configurado a través 
 
 Al pulsar sobre el *datasource* de Prometheus, se muestra la configuración del *datasource*. En la parte inferior, pulsa el botón *Save & Test* para validar que Grafana puede obtener datos de Prometheus.
 
+## Servicio
+
+En el artículo de la referencia se incluyen dos *annotations* en la definición del servicio; `prometheus.io/scrape: 'true'` y `prometheus.io/port: '3000'`. En [Kubernetes & Prometheus Scraping Configuration](https://www.weave.works/docs/cloud/latest/tasks/monitor/configuration-k8s/) se indica que la configuración por defecto de Prometheus es la de obtener métricas de todos los *pods*. Por tanto, no es necesario establecer `prometheus.io/scrape: 'true'`.
+
+Lo mismo ocurre con `prometheus.io/port: '3000'`, que permite especificar el puerto a través del cual Prometheus obtiene las métricas, en el caso de que no se especifique el puerto en la definición del *pod*.
+
+En nuestro caso vamos a acceder a Grafana a través de un *Ingress*, por lo que creamos un servicio de tipo *ClusterIP*:
+
+```yaml
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  selector: 
+    app: grafana
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+```
 
 ## Referencias
 

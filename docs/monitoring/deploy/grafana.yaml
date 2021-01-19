@@ -63,3 +63,16 @@ spec:
           configMap:
               defaultMode: 420
               name: grafana-datasources
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  selector: 
+    app: grafana
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
