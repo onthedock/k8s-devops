@@ -97,6 +97,34 @@ spec:
               name: grafana-datasources
 ```
 
+### Validación del despliegue
+
+Podemos validar que Grafana se ha desplegado correctamente usando `port-foward`.
+
+En primer lugar, obtenemos el nombre del pod generado:
+
+```bash
+$ kubectl get pods -n monitoring
+NAME                                            READY   STATUS    RESTARTS   AGE
+prometheus-node-exporter-9v8sq                  1/1     Running   1          2d7h
+prometheus-pushgateway-5d6884b99-7zzpz          1/1     Running   1          2d7h
+prometheus-alertmanager-58b5b9d6d8-d9vnc        2/2     Running   2          2d7h
+prometheus-server-6b687c4b87-j97mr              2/2     Running   2          2d7h
+prometheus-kube-state-metrics-95d956569-z9wck   1/1     Running   2          2d7h
+grafana-6cb5cf45bf-lzmvj                        1/1     Running   0          16m
+```
+
+A continuación, usamdos `port-forward` para conectar con el *pod* de Grafana (en el puerto 3000, como vemos en `containerPort: 3000` en el fichero de definición del *deployment*):
+
+```bash
+$ kubectl -n monitoring port-forward grafana-6cb5cf45bf-lzmvj 3000:3000
+Forwarding from 127.0.0.1:3000 -> 3000
+Forwarding from [::1]:3000 -> 3000
+
+```
+
+A través del navegador podemos acceder a la página de *login* de Grafana a través de [http://localhost:3000](http://localhost:3000).
+
 ## Referencias
 
 - [How to Setup Grafana on Kubernetes](https://devopscube.com/setup-grafana-kubernetes/) por Bibin Wilson, 4/11/2019.
