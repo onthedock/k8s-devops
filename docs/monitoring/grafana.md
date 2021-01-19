@@ -1,5 +1,12 @@
 # Grafana
 
+> **Versiones**
+>
+> - k3d: 3.4.0
+> - Kubernetes: 1.19.4
+> - Grafana: 7.3.7
+> - Traefik 1.7.19 (desplegado por defecto con k3d)
+
 Grafana es una herramienta de código abierto para la visualización de *dashboards*. Los datos mostrados provienen de fuentes de datos como Prometheus, AWS CloudWatch, etc.
 
 Este tutorial explica cómo configurar Grafana en un clúster de Kubernetes. Puedes crear *dashboards* para las métricas de Kubernetes a través de Prometheus.
@@ -228,7 +235,6 @@ spec:
               number: 3000
 
 ```
-
 
 ## Referencias
 
