@@ -10,6 +10,8 @@ nav:
   - Monitoring:
       Prometheus:                   monitoring/prometheus.md
       Componentes de Prometheus:    monitoring/prometheus-componentes.md
+  - Grafana:
+      Grafana:                      monitoring/grafana.md
   - Git:
       Deshacer último commit local: git/deshacer-ultimo-commit-local.md
   - Mkdocs:                         mkdocs/basic-setup.md
