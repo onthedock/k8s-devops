@@ -161,6 +161,75 @@ spec:
       protocol: TCP
 ```
 
+## Publicar Grafana con un *Ingress*
+
+El paso final en el despliegue de Grafana es *publicarlo* usando un *ingress* para que sea accesible desde el exterior del clúster.
+
+Usamos como guía las instrucciones en la web de **k3d** [Exposing Services](https://k3d.io/usage/guides/exposing_services/):
+
+```yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+```
+
+> Al crear el *Ingres*, vemos que Grafana es accesible a través de la IP 172.18.0.2. En nuestro caso (usando **k3d**, "k3s en Docker"), esta IP corresponde a la IP del interfaz *bridge* en nuestro equipo.
+
+```bash
+$ kubectl get ingress -n monitoring
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+; use networking.k8s.io/v1 Ingress
+NAME      CLASS    HOSTS   ADDRESS      PORTS   AGE
+grafana   <none>   *       172.18.0.2   80      5m22s
+```
+
+Tal y como hemos configurado el *ingress*, redirige todo el tráfico a Grafana, por lo que no podemos desplegar más aplicaciones en el clúster.
+
+Una opción es modificar el campo `path` en el *ingress*, pero ésto nos obligaría a realizar algún tipo de *re-escritura* del *path* (o modificar la aplicación), por lo que usamos la opción de definir el `host`.
+
+Añadimos el campo `.spec.rules.host` indicando el nombre `grafana.k3s.lab` (definido en el DNS), de manera que sólo el tráfico dirigido a `grafana.k3s.lab` acabe en el servicio de Grafana.
+
+> En mi caso, "el DNS" es una entrada en el fichero `/etc/hosts` de mi equipo.
+
+```yaml
+---
+# apiVersion: networking.k8s.io/v1beta1 # for k3s < v1.19
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: "grafana.k3s.lab"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grafana
+            port:
+              number: 3000
+
+```
+
+
 ## Referencias
 
 - [How to Setup Grafana on Kubernetes](https://devopscube.com/setup-grafana-kubernetes/) por Bibin Wilson, 4/11/2019.
