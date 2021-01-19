@@ -97,6 +97,8 @@ spec:
               name: grafana-datasources
 ```
 
+> Este despliegue usar un volumen de tipo [*emptyDir*](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir). En el futuro, quizás sea interesante cambiarlo por un volumen persistente.
+
 ### Validación del despliegue
 
 Podemos validar que Grafana se ha desplegado correctamente usando `port-foward`.
