@@ -114,7 +114,7 @@ prometheus-kube-state-metrics-95d956569-z9wck   1/1     Running   2          2d7
 grafana-6cb5cf45bf-lzmvj                        1/1     Running   0          16m
 ```
 
-A continuación, usamdos `port-forward` para conectar con el *pod* de Grafana (en el puerto 3000, como vemos en `containerPort: 3000` en el fichero de definición del *deployment*):
+A continuación, usamos `port-forward` para conectar con el *pod* de Grafana (en el puerto 3000, como vemos en `containerPort: 3000` en el fichero de definición del *deployment*):
 
 ```bash
 $ kubectl -n monitoring port-forward grafana-6cb5cf45bf-lzmvj 3000:3000
