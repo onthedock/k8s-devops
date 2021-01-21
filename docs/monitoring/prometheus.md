@@ -143,6 +143,22 @@ Forwarding from [::1]:9090 -> 9090
 
 ```
 
+## Despliegue de Prometheus (sin Helm)
+
+En esta sección usamos como referencia el artículo [How to Setup Prometheus Monitoring On Kubernetes Cluster](https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/)
+
+> En esta sección ya tenemos Prometheus desplegado (usando Helm) y Grafana, por lo que creamos un nuevo *namespace* llamado `monitor`.
+
+El primer paso es crear un *namespace*;
+
+```yaml
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: monitor
+```
+
 ## Referencias
 
 - [How Prometheus Monitoring works | Prometheus Architecture explained](https://youtu.be/h4Sl21AKiDg) en TechWorld with Nana, 24/04/2020, YouTube.
