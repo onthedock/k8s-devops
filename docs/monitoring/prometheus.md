@@ -147,6 +147,8 @@ Forwarding from [::1]:9090 -> 9090
 
 En esta sección usamos como referencia el artículo [How to Setup Prometheus Monitoring On Kubernetes Cluster](https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/)
 
+### *Namespace*
+
 > En esta sección ya tenemos Prometheus desplegado (usando Helm) y Grafana, por lo que creamos un nuevo *namespace* llamado `monitor`.
 
 El primer paso es crear un *namespace*;
