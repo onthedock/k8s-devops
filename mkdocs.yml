@@ -12,7 +12,8 @@ nav:
       Componentes de Prometheus:    monitoring/prometheus-componentes.md
       Despliegue de Grafana:        monitoring/grafana.md
   - Git:
-      Deshacer último commit local: git/deshacer-ultimo-commit-local.md
+      Deshacer último commit local:     git/deshacer-ultimo-commit-local.md
+      Comparar fichero entre dos ramas: git/comparar-fichero-entre-dos-ramas.md
   - Mkdocs:                         mkdocs/basic-setup.md
   - Referencias:                    referencias.md
 
