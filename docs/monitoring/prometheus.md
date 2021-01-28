@@ -161,6 +161,107 @@ metadata:
   name: monitor
 ```
 
+### *ClusterRole*
+
+El siguiente paso es definir los permisos de lectura a este *namespace* para que Prometheus puede obtener métricas de la API de Kubernetes.
+
+> En el fichero creamos tanto el *ClusterRole* como el *ClusterRoleBinding*, que asigna los permisos definidos a la cuenta `default`. Si quisiéramos usar otra cuenta, deberíamos crearla primero. El *ClusterRoleBinding* asocia los permisos a una cuenta en un *namespace* concreto, por lo que debes ajustar el nombre del *namespace*.
+
+```yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: monitor
+```
+
+Al aplicar este fichero, obtenemos:
+
+```bash
+$ kubectl apply -f prometheus.yaml 
+namespace/monitor unchanged
+Warning: rbac.authorization.k8s.io/v1beta1 ClusterRole is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRole
+clusterrole.rbac.authorization.k8s.io/prometheus created
+Warning: rbac.authorization.k8s.io/v1beta1 ClusterRoleBinding is deprecated in v1.17+, unavailable in v1.22+; use rbac.authorization.k8s.io/v1 ClusterRoleBinding
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+```
+
+Actualizamos el fichero de definición del *ClusterRole* y del *crb*:
+
+```yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: monitor  
+```
+
+Y ahora no tenemos ningún *warning*:
+
+```bash
+$ kubectl apply -f prometheus.yaml 
+namespace/monitor unchanged
+clusterrole.rbac.authorization.k8s.io/prometheus configured
+clusterrolebinding.rbac.authorization.k8s.io/prometheus configured
+```
 ## Referencias
 
 - [How Prometheus Monitoring works | Prometheus Architecture explained](https://youtu.be/h4Sl21AKiDg) en TechWorld with Nana, 24/04/2020, YouTube.
