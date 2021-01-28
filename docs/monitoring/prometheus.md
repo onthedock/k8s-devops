@@ -436,6 +436,105 @@ El fichero de configuración `prometheus.yaml` contine la definición de los *jo
 - `kubernetes-service-endpoints` Obtiene las métricas de los servicios anotados con `prometheus.io/scrape` y `prometheus.io/port`
 
 El fichero `prometheus.rules` contiene la definición y configuración de las reglas para **Alert Manager**.
+
+### Despliegue
+
+Con todas las piezas necesarias desplegadas, procedemos a desplegar Prometheus en sí; para ello usamos el siguiente *deployment*:
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+  namespace: monitor
+  labels:
+    app: prometheus-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-server
+  template:
+    metadata:
+      labels:
+        app: prometheus-server
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.24.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-server-conf
+  
+        - name: prometheus-storage-volume
+          emptyDir: {}
+```
+
+El artículo de referencia no especifica una imagen concreta; yo prefiero fijar la última disponible en el momento de redactar esta guía.
+
+Una vez el *pod* está disponible, validamos que la aplicación se ha desplegado correctamente acediendo mediante *port-forward*:
+
+```bash
+$ kubectl -n monitor port-forward prometheus-deployment-7d7b8f7b95-nk5z2 9090
+Forwarding from 127.0.0.1:9090 -> 9090
+Forwarding from [::1]:9090 -> 9090
+
+```
+
+Accediendo a la web de Prometheus podemos validar la ejecución de los diferentes *jobs* en *Status > Targets*.
+
+> El *job* `kube-state-metrics` falla porque no tenemos este componente desplegado. Las instrucciones para desplegar otros componentes asociados a Prometheus, como **Kube State Metrics**, **Alert Manager** o **Grafana** se describen en otros artículos de la serie [How to Setup Prometheus Monitoring On Kubernetes Cluster](https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/)
+
+### Servicio interno
+
+Creamos el servicio (interno) de Prometheus; dejamos el tipo de servicio en *ClusterIP* por defecto, ya que en general no accederemos a Prometheus directamente, sino que lo usaremos como *backend* de Grafana.
+
+Si quieremos aceder a Prometheus, usaremos *ingress* para que sea accesible desde el exterior del clúster.
+
+```yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: monitor
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '9090'
+spec:
+  selector: 
+    app: prometheus-server
+  ports:
+    - port: 9090
+      targetPort: 9090
+```
+
+> Para publicar el servicio de Prometheus como `NodePort`, usaremos [^k3d]:
+
+```yaml
+...
+spec:
+  type: NodePort
+  selector: 
+    app: prometheus-server
+  ports:
+    - port: 9090
+      targetPort: 9090
+      # nodePort not specified; we let K8s choose a random port 
+```
 ## Referencias
 
 - [How Prometheus Monitoring works | Prometheus Architecture explained](https://youtu.be/h4Sl21AKiDg) en TechWorld with Nana, 24/04/2020, YouTube.
