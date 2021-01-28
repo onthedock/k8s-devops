@@ -535,6 +535,19 @@ spec:
       targetPort: 9090
       # nodePort not specified; we let K8s choose a random port 
 ```
+
+#### Configuración del *datasource* en Grafana
+
+A la hora de configurar el *datasource* en Grafana debemos tener en cuenta dos cosas:
+
+- el nombre del *service* con el que se ha publicado el servidor de Prometheus. En el caso de Helm, el servicio era `prometheus-server`, mientras que en este despliegue manual lo hemos llamado `prometheus-service`.
+- el puerto en el que se publica el servicio (internamente en el clúster)
+- el nombre del *namespace* en el que se ha desplegado Prometheus
+
+En la configuración del *datasource* para Grafana, el valor del campo `URL` se compone mediante `http://${nombre-servicio}.${namespace}.svc:${puerto}`.
+
+En este despliegue manual, la URL quedaría `http://prometheus-service.monitor.svc:9090`.
+
 ## Referencias
 
 - [How Prometheus Monitoring works | Prometheus Architecture explained](https://youtu.be/h4Sl21AKiDg) en TechWorld with Nana, 24/04/2020, YouTube.
@@ -543,4 +556,8 @@ spec:
 
 - [Prometheus Monitoring - Steps to monitor third-party apps using Prometheus Exporter | Part 2](https://youtu.be/mLPg49b33sA) en TechWorld with Nana, 25/09/2020, YouTube.
 
+- [How to Setup Prometheus Monitoring On Kubernetes Cluster](https://devopscube.com/setup-prometheus-monitoring-on-kubernetes/) en DevOpsCube.com, 02/10/2019 por Bibin Wilson.
+
 [^namespace]: Referencia a la documentación de Helm del comando `install`: [helm install](https://helm.sh/docs/helm/helm_install/)
+
+[^k3d]: En k3d la IP "pública" de los "nodos" del clúster la puedes obtener *inspeccionando* cualquier de los contenedores/nodos del clúster `docker inspect ${CONTAINER} | grep -i ipaddress`.
