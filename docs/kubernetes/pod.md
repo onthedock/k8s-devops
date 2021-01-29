@@ -55,6 +55,14 @@ Para aplicar los cambios, es necesario crear nuevos recursos a partir de la plan
 
 Cada tipo de recurso implementa sus propias reglas para gestionar los cambios en la plantilla del Pod.
 
+## Recursos compartidos y comunicación
+
+### Almacenamiento
+
+Un Pod puede especificar un conjunto de *volúmenes* de almacenamiento. Todos los contenedores en el Pod puede acceder a los volúmenes compartidos, lo que permite compartir datos entre los contenedores de un mismo Pod.
+
+Los volúmenes también proporcionan almacenamiento para persistir datos en caso de que alguno de los contenedores del Pod tenga que ser reiniciado.
+
 ## Referencia
 
 - [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) en la documentación oficial de Kubernetes
