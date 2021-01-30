@@ -83,6 +83,28 @@ Los pods estáticos están siempre asociados a un **kubelet** en un nodo. El uso
 
 El **kubelet** automáticamente intenta crear un *mirror pod* en el servidor de API de Kubernetes para cada pod estático. Esto significa que los Pods que se ejecutan en un nodo son visibles para en el servidor de API, pero no se pueden gestionar desde allí.
 
+## Ejemplo - **Jumpod**
+
+Como los pods tienen IPs que sólo son visibles desde "dentro" del clúster, una manera sencilla de realizar pruebas es desde un pod desplegado a modo de "jumpserver"; de ahí el nombre: *jump+pod*.
+
+El pod es sencillamente un pod con *busybox*:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: jumpod
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+  restartPolicy: OnFailure
+```
+
 ## Referencia
 
 - [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) en la documentación oficial de Kubernetes
