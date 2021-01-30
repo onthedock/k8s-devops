@@ -74,6 +74,15 @@ Los contenedores dentro de un Pod ven el *hostname* de sistema como el especific
 Se puede habilitar el *modo privilegiado* ara cualquier contenedor usando el *flag* `privileged` en el *security context* de la sección `spec` de la definición del contenedor. Este modo es útil para contenedores que tienen que acceder a las capacidades administrativas del sistema operativo, como manipular el *stack* de red o acceder a los dispositivos de hardware.
 
 En este modo un contenedor obtiene prácticamente los mismos privilegios que los procesos que se ejecutan fuera del contenedor.
+
+### Pods estáticos
+
+Los *pods estáticos* son gestionados directamente por el **kubelet** en cada nodo, sin que el servidor de la API de Kubernetes los observe.
+
+Los pods estáticos están siempre asociados a un **kubelet** en un nodo. El uso principal de los pods estáticos es la ejecución de un *self-hosted control plane*; en otras palabras, el **kubelet** supervisa los elementos individuales del *control plane*.
+
+El **kubelet** automáticamente intenta crear un *mirror pod* en el servidor de API de Kubernetes para cada pod estático. Esto significa que los Pods que se ejecutan en un nodo son visibles para en el servidor de API, pero no se pueden gestionar desde allí.
+
 ## Referencia
 
 - [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) en la documentación oficial de Kubernetes
