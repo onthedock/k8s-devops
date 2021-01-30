@@ -7,6 +7,7 @@ nav:
   - ArgoCD:
       Despliegue:                   argocd/argocd.md
       Acceso a la consola:          argocd/acceso-consola.md
+      Nueva aplicación:             argocd/nueva-aplicacion.md
   - Monitoring:
       Despliegue de Prometheus:     monitoring/prometheus.md
       Componentes de Prometheus:    monitoring/prometheus-componentes.md
@@ -15,8 +16,11 @@ nav:
       Descripción general:          kubernetes/descripcion-general.md
       Pods:                         kubernetes/pod.md
   - Git:
-      Deshacer último commit local:     git/deshacer-ultimo-commit-local.md
-      Comparar fichero entre dos ramas: git/comparar-fichero-entre-dos-ramas.md
+      Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
+      Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
+      Combinar commits (squash):                              git/combinar-commits.md
+      Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
+      Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
   - Mkdocs:                         mkdocs/basic-setup.md
   - Referencias:                    referencias.md
 
