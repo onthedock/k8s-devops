@@ -69,6 +69,11 @@ Cada Pod tiene asiganda una dirección IP única. Cada contenedor en el Pod comp
 
 Los contenedores dentro de un Pod ven el *hostname* de sistema como el especificado en el campo `name` del Pod.
 
+### Modo privilegiado para los contenedores
+
+Se puede habilitar el *modo privilegiado* ara cualquier contenedor usando el *flag* `privileged` en el *security context* de la sección `spec` de la definición del contenedor. Este modo es útil para contenedores que tienen que acceder a las capacidades administrativas del sistema operativo, como manipular el *stack* de red o acceder a los dispositivos de hardware.
+
+En este modo un contenedor obtiene prácticamente los mismos privilegios que los procesos que se ejecutan fuera del contenedor.
 ## Referencia
 
 - [Pod](https://kubernetes.io/docs/concepts/workloads/pods/) en la documentación oficial de Kubernetes
