@@ -1,0 +1,24 @@
+---
+kind: TaskRun
+apiVersion: tekton.dev/v1alpha1
+metadata:
+  generateName: greeter-run-federico-
+spec:
+  params:
+    - name: subject
+      value: "Federico Mercurio"
+  taskRef:
+    kind: Task
+    name: greeter
+---
+kind: TaskRun
+apiVersion: tekton.dev/v1alpha1
+metadata:
+  generateName: greeter-run-mery-
+spec:
+  params:
+    - name: subject
+      value: "Mary Sun"
+  taskRef:
+    kind: Task
+    name: greeter

@@ -8,6 +8,10 @@ nav:
       Despliegue:                   argocd/argocd.md
       Acceso a la consola:          argocd/acceso-consola.md
       Nueva aplicación:             argocd/nueva-aplicacion.md
+  - Tekton:
+      Tekton:                       tekton/overview.md
+      Despliegue de Tekton:         tekton/deploy-tekton.md
+      CI/CD con Tekton:             tekton/first-workflow.md
   - Monitoring:
       Despliegue de Prometheus:     monitoring/prometheus.md
       Componentes de Prometheus:    monitoring/prometheus-componentes.md

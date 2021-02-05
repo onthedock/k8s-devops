@@ -1,0 +1,12 @@
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: goodbye
+spec:
+  steps:
+    - name: goodbye
+      image: alpine:3.13
+      script: |
+        #!/bin/sh
+        echo "Goodbye World!"

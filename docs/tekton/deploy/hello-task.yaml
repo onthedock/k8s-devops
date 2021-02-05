@@ -1,0 +1,13 @@
+---
+kind: Task
+apiVersion: tekton.dev/v1beta1
+metadata:
+  name: hello
+spec:
+  steps:
+    - name: hello
+      image: alpine:3.13
+      command:
+        - echo
+      args:
+        - "Hello world!"
