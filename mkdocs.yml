@@ -18,6 +18,7 @@ nav:
       Despliegue de Grafana:        monitoring/grafana.md
   - Conceptos de Kubernes:
       Descripción general:          kubernetes/descripcion-general.md
+      Comandos útiles:              kubernetes/comandos-utiles.md
       Pods:                         kubernetes/pod.md
   - Git:
       Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
