@@ -1,0 +1,6 @@
+---
+customChecks:
+  - name: required-label-release
+    template: required-label
+    params:
+      key: company-name.com/release

@@ -1,0 +1,84 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: jumpod
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: test-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: jumpod
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command:
+        - sleep
+        - "3600"
+      imagePullPolicy: IfNotPresent
+      securityContext:
+        runAsUser: 1001
+        runAsGroup: 1001
+        readOnlyRootFilesystem: true
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "10m"
+        limits:
+          memory: "64Mi"
+          cpu: "10m"
+      volumeMounts:
+        - mountPath: "/var/www/html"
+          name: test-volume
+  volumes:
+    - name: test-volume
+      persistentVolumeClaim:
+        claimName: test-pvc
+  restartPolicy: Always
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: jumpod-deploy
+  label:
+    app: jumpod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jumpod
+  template:
+    metadata:
+      labels:
+        app: jumpod
+    spec:
+      containers:
+        - name: jumpod
+          image: busybox
+          command:
+            - sleep
+            - "3600"
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 1001
+            runAsGroup: 1001
+            readOnlyRootFilesystem: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "64Mi"
+              cpu: "10m"
+

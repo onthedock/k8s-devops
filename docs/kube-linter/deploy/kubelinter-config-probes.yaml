@@ -1,0 +1,6 @@
+---
+checks:
+  addAllBuiltIn: true
+  include:
+    - "no-readiness-probe"
+    - "no-liveness-probe"
