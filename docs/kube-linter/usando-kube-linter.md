@@ -586,7 +586,7 @@ Aunque este Deployment no las necesita, una buena práctica es la de definir *pr
 
 KubeLinter no verifica por defecto si la definición del objeto contiene las *readiness* o *liveness* *probes*. Las comprobaciones están definidas, pero deshabilitadas [^1].
 
-Para incluir una validación deshabilitada por defecto, debemos especificarla pasando un fichero de configuración a KubeLinter `--config kubelinter-config.yaml`. Este fichero puede contiener dos secciones: `checks` y `customChecks`.
+Para incluir una validación deshabilitada por defecto, debemos especificarla pasando un fichero de configuración a KubeLinter `--config kubelinter-config.yaml`. Este fichero puede contener dos secciones: `checks` y `customChecks`.
 
 El siguiente ejemplo de fichero de configuración habilita las comprobaciones de existencia de las *readiness* y *liveness* *probes*:
 
