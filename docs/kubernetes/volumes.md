@@ -40,7 +40,7 @@ Los *claims* permanecen sin vincular mientras no exista un PV que cumpla con la 
 
 ### Uso
 
-Los Pods usan los *claims* como si fueran volúmenes. El clúster inspecciona el *claim* para encontrar el volumen vinculado (*bound*) y montarlo en el Pod. Para aquellos volúmenes que soportan diferentes modos de acceso, el usuario indica el deseado a través del *claim*.
+Los Pods usan los *claims* como si fueran volúmenes. El clúster inspecciona el *claim* para encontrar el volumen vinculado (*bound*) y montarlo en el Pod. Para aquellos volúmenes que soportan diferentes modos de acceso, el usuario indica el modo deseado a través del *claim*.
 
 En cuanto un usuario tiene un *claim* y el *claim* se vincula, el PV asociado pertenece al usuario mientras lo necesite. Los usuarios despliegan Pods y acceden a los PVs vinculados a través de la sección `persistenVolumeClaim` de la sección `volumes` de la definición del Pod.
 
