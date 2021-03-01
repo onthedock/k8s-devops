@@ -20,7 +20,7 @@ nav:
       Descripción general:          kubernetes/descripcion-general.md
       Comandos útiles:              kubernetes/comandos-utiles.md
       Pods:                         kubernetes/pod.md
-      Volumes:                      kubernetes/volumes.md
+      Persistent Volumes:           kubernetes/persistent-volumes.md
   - Git:
       Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
       Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
