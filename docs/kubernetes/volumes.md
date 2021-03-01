@@ -24,7 +24,7 @@ El administrador del clúster crea un determinado número de PVs. Los *Persisten
 
 #### Provisionamiento dinámico
 
-El clúster puede crear de forma dinámica un *PersistentVolume* si ninguno de los existentes permite satisfacer las necesidades indicadas en un *PersistentVolumeClaim*. La creación del volumen se realiza usando los detalles contenidos en la *StorageClass*; así, el PVC solicita un determinado tipo de almacenamiento indicando una *StorageClass*; el administrador crea la *StorageClass* para que se pueda provisionar el almacenamiento de forma dinámica. (Si el PVC indica una *StorageClasS* "", se deshabilita el provisionado dinámico).
+El clúster puede crear de forma dinámica un *PersistentVolume* si ninguno de los existentes permite satisfacer las necesidades indicadas en un *PersistentVolumeClaim*. La creación del volumen se realiza usando los detalles contenidos en la *StorageClass*; así, el PVC solicita un determinado tipo de almacenamiento indicando una *StorageClass*; el administrador crea la *StorageClass* para que se pueda provisionar el almacenamiento de forma dinámica. (Si el PVC indica una *StorageClass* "", se deshabilita el provisionado dinámico).
 
 Si hay más de una *StorageClass* definida en el clúster, el administrador puede seleccionar una de ellas como la *DefaultStorageClass* en el *admission controller* del servidor de la API.
 
