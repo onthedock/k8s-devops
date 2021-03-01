@@ -32,7 +32,7 @@ Si hay más de una *StorageClass* definida en el clúster, el administrador pued
 
 Cuando el usuario solicita una determinda cantidad de almacenamiento, el bucle de control que observa los PVCs busca un PV que satisfaga las necesidades del PVC (si es posible); si se ha habilitado el provisionamiento dinámico, se crea un PV que cumple los requerimientos del PVC.
 
-Por tanto, el usuario siempre recibe como mínimo la cantidad requerida, aunque en el caso del provisionamiento estático, es posible que el volumen proporcione mayor cantidad de almacenaje.
+Por tanto, el usuario siempre recibe como mínimo la cantidad requerida, aunque en el caso del provisionamiento estático, es posible que el volumen proporcione mayor cantidad de almacenaje de la requerida.
 
 El controlador asocia el PV y el PVC de forma exclusiva, de forma que existe una relación de uno a uno entre PV y PVC, independientemente de cómo se ha creado el PV.
 
