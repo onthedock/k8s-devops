@@ -24,7 +24,7 @@ El administrador del clúster crea un determinado número de PVs. Los *Persisten
 
 #### Provisionamiento dinámico
 
-El clúster puede crear de forma dinámica un *PersistentVolume* si ninguno de los existentes permite satisfacer las necesidades indicades en un *PersistentVolumeClaim*. La creación del volumen se realiza usando los detalles contenidos en la *StorageClass*; así, el PVC solicita un determinado tipo de almacenamiento indicando una *StorageClass*; el administrador crea la *StorageClass* para que se pueda provisionar el almacenamiento de forma dinámica. (Si el PVC indica una *StorageClasS* "", se deshabilita el provisionado dinámico).
+El clúster puede crear de forma dinámica un *PersistentVolume* si ninguno de los existentes permite satisfacer las necesidades indicadas en un *PersistentVolumeClaim*. La creación del volumen se realiza usando los detalles contenidos en la *StorageClass*; así, el PVC solicita un determinado tipo de almacenamiento indicando una *StorageClass*; el administrador crea la *StorageClass* para que se pueda provisionar el almacenamiento de forma dinámica. (Si el PVC indica una *StorageClasS* "", se deshabilita el provisionado dinámico).
 
 Si hay más de una *StorageClass* definida en el clúster, el administrador puede seleccionar una de ellas como la *DefaultStorageClass* en el *admission controller* del servidor de la API.
 
@@ -43,10 +43,6 @@ Los *claims* permanecen sin vincular mientras no exista un PV que cumpla con la 
 Los Pods usan los *claims* como si fueran volúmenes. El clúster inspecciona el *claim* para encontrar el volumen vinculado (*bound*) y montarlo en el Pod. Para aquellos volúmenes que soportan diferentes modos de acceso, el usuario indica el deseado a través del *claim*.
 
 En cuanto un usuario tiene un *claim* y el *claim* se vincula, el PV asociado pertenece al usuario mientras lo necesite. Los usuarios despliegan Pods y acceden a los PVs vinculados a través de la sección `persistenVolumeClaim` de la sección `volumes` de la definición del Pod.
-
-
-
-
 
 ## Referencia
 
