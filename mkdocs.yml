@@ -35,6 +35,10 @@ nav:
       Servidor de desarrollo:       mkdocs/servidor-de-desarrollo.md
   - Referencias:                    referencias.md
 
+# Repo Information
+repo_name: k8s-devops
+repo_url: https://github.com/onthedock/k8s-devops
+
 theme:
   name: 'material'
   palette:
