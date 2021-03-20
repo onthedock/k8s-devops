@@ -4,6 +4,7 @@ nav:
   - Recomendaciones:                index.md
   - k3d:
       Instalación:                  k3d/instalacion.md
+      Crear un clúster:             k3d/crear-cluster.md
   - ArgoCD:
       Despliegue:                   argocd/argocd.md
       Acceso a la consola:          argocd/acceso-consola.md
