@@ -1,0 +1,39 @@
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  namespace: minio
+  generateName: mc-alias-set-
+spec:
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: mc-alias-set
+          image: minio/mc
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: minio-root-user
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secret
+                  key: minio-root-password
+          command: ["/bin/bash"]
+          args:
+            - "-c"
+            - "mc alias set minio http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD"
+          volumeMounts:
+            - name: minio-config
+              mountPath: "/root/.mc"
+      volumes:
+        - name: minio-config
+          persistentVolumeClaim:
+            claimName: minio-config
+
+    

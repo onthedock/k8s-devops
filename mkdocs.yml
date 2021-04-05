@@ -17,6 +17,10 @@ nav:
       Despliegue de Prometheus:     monitoring/prometheus.md
       Componentes de Prometheus:    monitoring/prometheus-componentes.md
       Despliegue de Grafana:        monitoring/grafana.md
+  - Storage:
+      MinIO:
+        - Instalación de MinIO:         storage/minio/instalacion-de-minio.md
+        - Uso del cliente de MinIO mc:  storage/minio/uso-del-cliente-de-minio-mc.md
   - Conceptos de Kubernes:
       Descripción general:          kubernetes/descripcion-general.md
       Comandos útiles:              kubernetes/comandos-utiles.md
