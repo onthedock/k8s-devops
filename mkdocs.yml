@@ -21,6 +21,8 @@ nav:
       MinIO:
         - Instalación de MinIO:         storage/minio/instalacion-de-minio.md
         - Uso del cliente de MinIO mc:  storage/minio/uso-del-cliente-de-minio-mc.md
+      Velero:
+        - Instalación de Velero:        storage/backup/instalacion-de-velero.md
   - Conceptos de Kubernes:
       Descripción general:          kubernetes/descripcion-general.md
       Comandos útiles:              kubernetes/comandos-utiles.md
