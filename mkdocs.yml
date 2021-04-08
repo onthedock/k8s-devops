@@ -24,6 +24,7 @@ nav:
       Velero:
         - Instalación de Velero:        storage/backup/instalacion-de-velero.md
         - Crear copia de seguridad:     storage/backup/crear-copia-de-seguridad.md
+        - Recuperar copia de seguridad: storage/backup/recuperar-copia-de-seguridad.md
   - Conceptos de Kubernes:
       Descripción general:          kubernetes/descripcion-general.md
       Comandos útiles:              kubernetes/comandos-utiles.md
