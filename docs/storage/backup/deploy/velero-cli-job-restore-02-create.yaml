@@ -1,0 +1,25 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  labels:
+      app: backup-nginx
+  namespace: velero-cli
+  generateName: velero-restore-create-
+spec:
+  template:
+    metadata:
+      labels:
+        app: backup-nginx
+    spec:
+      serviceAccount: velerocli
+      restartPolicy: Never
+      containers:
+        - name: velero-restore-create
+          image: docker.io/xaviaznar/velero-cli:1.5.3
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: BACKUP2RESTORE
+              value: "nginx-example-backups-20210404203557"
+          command: ["/bin/sh"]
+          args: ["-c", "velero restore create --from-backup $BACKUP2RESTORE"] 
