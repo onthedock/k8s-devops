@@ -36,9 +36,13 @@ nav:
       Combinar commits (squash):                              git/combinar-commits.md
       Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
       Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
-  - Kube-linter:                    
-      KubeLinter:                  kube-linter/kube-linter.md
-      Uso de KubeLinter:           kube-linter/usando-kube-linter.md
+  - Seguridad:
+      Kube-linter:                    
+        KubeLinter:                  seguridad/kube-linter/kube-linter.md
+        Uso de KubeLinter:           seguridad/kube-linter/usando-kube-linter.md
+      OpenLDAP:
+        Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
+
   - Mkdocs:
       Configuración básica:         mkdocs/basic-setup.md
       Servidor de desarrollo:       mkdocs/servidor-de-desarrollo.md
