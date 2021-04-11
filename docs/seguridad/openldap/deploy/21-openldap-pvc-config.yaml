@@ -1,0 +1,15 @@
+---
+# Persistent Volume Claim ldap-config
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  namespace: identity
+  name: ldap-config
+  labels:
+    app: openldap
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,47 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  namespace: identity
+  labels:
+    app: openldap
+  generateName: ldap-adduser-
+spec:
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: openldap-adduser
+          image: osixia/openldap:1.5.0
+          env:
+            - name: LDAP_URL
+              value: "ldap://openldap.identity.svc"
+            - name: LDAP_BASE
+              value: "dc=ameisin,dc=lab"
+            - name: LDAP_BIND_DN
+              value: "cn=admin,dc=ameisin,dc=lab"
+            - name: LDAP_BIND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-secret
+                  key: admin-password
+          command: ["/bin/bash"]
+          args:
+            - "-c"
+            - |
+              cat <<EOF>>/tmp/user.ldif
+              dn: cn=marysun,ou=users,dc=ameisin,dc=lab
+              objectClass: top
+              objectClass: person
+              objectClass: organizationalPerson
+              objectClass: inetOrgPerson
+              cn: Mary Sun
+              uid: marysun
+              givenName: Mary Sun
+              sn: marysun
+              userPassword: Ch@ngeM3!
+              EOF
+              ldapadd -x -D $LDAP_BIND_DN -w $LDAP_BIND_PASSWORD -f /tmp/user.ldif -H $LDAP_URL

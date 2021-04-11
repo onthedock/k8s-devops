@@ -1,0 +1,46 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  namespace: identity
+  labels:
+    app: openldap
+  generateName: ldap-add-ou-
+spec:
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: openldap-add-ou
+          image: osixia/openldap:1.5.0
+          env:
+            - name: LDAP_URL
+              value: "ldap://openldap.identity.svc"
+            - name: LDAP_BASE
+              value: "dc=ameisin,dc=lab"
+            - name: LDAP_BIND_DN
+              value: "cn=admin,dc=ameisin,dc=lab"
+            - name: LDAP_BIND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-secret
+                  key: admin-password
+          command: ["/bin/bash"]
+          args:
+            - "-c"
+            - |
+              cat <<EOF>>/tmp/ous.ldif
+              dn: ou=groups,dc=ameisin,dc=lab
+              objectClass: organizationalUnit
+              objectClass: top
+              ou: groups
+
+              dn: ou=users,dc=ameisin,dc=lab
+              objectClass: organizationalUnit
+              objectClass: top
+              ou: users
+              EOF
+              ldapadd -x -D $LDAP_BIND_DN -w $LDAP_BIND_PASSWORD -c -f /tmp/ous.ldif -H $LDAP_URL

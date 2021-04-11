@@ -1,0 +1,32 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  namespace: identity
+  labels:
+    app: openldap
+  generateName: ldap-search-
+spec:
+  template:
+    metadata:
+      labels:
+        app: openldap
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: openldap-search
+          image: osixia/openldap:1.5.0
+          env:
+            - name: BASE
+              value: "dc=ameisin,dc=lab"
+            - name: LDAP_BIND_DN
+              value: "cn=admin,dc=ameisin,dc=lab"
+            - name: LDAP_BIND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ldap-secret
+                  key: admin-password
+          command: ["/bin/bash"]
+          args:
+            - "-c"
+            - "ldapsearch -x -H ldap://openldap.identity.svc -b $BASE -D \"$LDAP_BIND_DN\" -w $LDAP_BIND_PASSWORD"
