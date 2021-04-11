@@ -42,6 +42,8 @@ nav:
         Uso de KubeLinter:           seguridad/kube-linter/usando-kube-linter.md
       OpenLDAP:
         Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
+      Keycloak:
+        Despliegue de Keycloak:      seguridad/keycloak/despliegue-de-keycloak.md
 
   - Mkdocs:
       Configuración básica:         mkdocs/basic-setup.md
