@@ -161,7 +161,7 @@ spec:
 
 En vez de ejecutar el comando de forma interactiva en un contenedor desplegado, usaremos un *Job* para validar que el despliegue de MySQL se ha realizado correctamente.
 
-Si se establece la conexión a la base de datos, el *Job* finaliza correctamente. 
+Si se establece la conexión a la base de datos, el *Job* finaliza correctamente.
 
 ```yaml
 ---
