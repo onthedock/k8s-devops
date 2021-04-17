@@ -1,0 +1,33 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  namespace: mysql
+  labels:
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/instance: mysql-app
+    app.kubernetes.io/version: "8.0"
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: app
+    app.kubernetes.io/managed-by: manually
+  generateName: check-mysql-status-
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mysql
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: check-mysql-status
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-root-password
+                  key: MYSQL_ROOT_PASSWORD
+          command: ["/bin/bash"]
+          args:
+            - "-c"
+            - "mysql -h mysql.mysql.svc -p$MYSQL_ROOT_PASSWORD"

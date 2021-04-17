@@ -1,0 +1,19 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: mysql
+  name: mysql
+  labels:
+    app.kubernetes.io/name: mysql
+    app.kubernetes.io/instance: mysql-app
+    app.kubernetes.io/version: "8.0"
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: app
+    app.kubernetes.io/managed-by: manually
+spec:
+  selector:
+    app.kubernetes.io/name: mysql
+  ports:
+    - name: mysql-tcp
+      port : 3306

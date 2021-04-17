@@ -43,6 +43,9 @@ nav:
       OpenLDAP:
         Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
 
+  - Apps básicas:
+      MySQL:
+        MySQL (sólo 1 réplica):     appsbasicas/mysql/mysql-1-replica.md
   - Mkdocs:
       Configuración básica:         mkdocs/basic-setup.md
       Servidor de desarrollo:       mkdocs/servidor-de-desarrollo.md
