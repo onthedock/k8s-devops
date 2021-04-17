@@ -5,14 +5,15 @@ nav:
   - k3d:
       Instalación:                  k3d/instalacion.md
       Crear un clúster:             k3d/crear-cluster.md
-  - ArgoCD:
-      Despliegue:                   argocd/argocd.md
-      Acceso a la consola:          argocd/acceso-consola.md
-      Nueva aplicación:             argocd/nueva-aplicacion.md
-  - Tekton:
-      Tekton:                       tekton/overview.md
-      Despliegue de Tekton:         tekton/deploy-tekton.md
-      CI/CD con Tekton:             tekton/first-workflow.md
+  - DevOps:
+      ArgoCD:
+        Despliegue:                 devops/argocd/argocd.md
+        Acceso a la consola:        devops/argocd/acceso-consola.md
+        Nueva aplicación:           devops/argocd/nueva-aplicacion.md
+      Tekton:
+        Tekton:                     devops/tekton/overview.md
+        Despliegue de Tekton:       devops/tekton/deploy-tekton.md
+        CI/CD con Tekton:           devops/tekton/first-workflow.md  
   - Monitoring:
       Despliegue de Prometheus:     monitoring/prometheus.md
       Componentes de Prometheus:    monitoring/prometheus-componentes.md
@@ -25,27 +26,28 @@ nav:
         - Instalación de Velero:        storage/backup/instalacion-de-velero.md
         - Crear copia de seguridad:     storage/backup/crear-copia-de-seguridad.md
         - Recuperar copia de seguridad: storage/backup/recuperar-copia-de-seguridad.md
+  - Seguridad:
+        Kube-linter:                    
+          KubeLinter:                  seguridad/kube-linter/kube-linter.md
+          Uso de KubeLinter:           seguridad/kube-linter/usando-kube-linter.md
+        OpenLDAP:
+          Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
+
   - Conceptos de Kubernetes:
       Descripción general:          kubernetes/descripcion-general.md
       Comandos útiles:              kubernetes/comandos-utiles.md
       Pods:                         kubernetes/pod.md
       Volumes:                      kubernetes/volumes.md
+  
+  - Apps básicas:
+      MySQL:
+        MySQL (sólo 1 réplica):     appsbasicas/mysql/mysql-1-replica.md
   - Git:
       Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
       Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
       Combinar commits (squash):                              git/combinar-commits.md
       Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
       Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
-  - Seguridad:
-      Kube-linter:                    
-        KubeLinter:                  seguridad/kube-linter/kube-linter.md
-        Uso de KubeLinter:           seguridad/kube-linter/usando-kube-linter.md
-      OpenLDAP:
-        Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
-
-  - Apps básicas:
-      MySQL:
-        MySQL (sólo 1 réplica):     appsbasicas/mysql/mysql-1-replica.md
   - Mkdocs:
       Configuración básica:         mkdocs/basic-setup.md
       Servidor de desarrollo:       mkdocs/servidor-de-desarrollo.md
