@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: webserver-service
+    app.kubernetes.io/name: doc-as-code-service
+    app.kubernetes.io/part-of: doc-as-code
+  name: doc-as-code-web
+  namespace: doc-as-code
+spec:
+  ports:
+  - name: http-tcp
+    port: 80
+    protocol: TCP
+  selector:
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/name: doc-as-code-nginx
+    app.kubernetes.io/part-of: doc-as-code
+

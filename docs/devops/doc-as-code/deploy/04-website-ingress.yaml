@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/name: doc-as-code-traefik-ingress
+    app.kubernetes.io/part-of: doc-as-code
+  name: doc-as-code-traefik-ingress
+  namespace: doc-as-code
+spec:
+  rules:
+  - host: docs.k3s.vm.lab
+    http:
+      paths:
+      - backend:
+          service:
+            name: doc-as-code-web
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+

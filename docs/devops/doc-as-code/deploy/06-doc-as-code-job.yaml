@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: doc-as-code-builder-
+  labels:
+    app.kubernetes.io/component: builder
+    app.kubernetes.io/name: doc-as-code-build
+    app.kubernetes.io/part-of: doc-as-code
+  namespace: doc-as-code
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: builder
+        app.kubernetes.io/name: doc-as-code-build
+        app.kubernetes.io/part-of: doc-as-code
+    spec:
+      containers:
+      - args:
+        - -c
+        - git clone $DOCS_REPO_URL /docs && mkdocs build --site-dir /usr/share/nginx/html
+        command:
+        - /bin/sh
+        env:
+        - name: DOCS_REPO_URL
+          valueFrom:
+            configMapKeyRef:
+              key: repo_url
+              name: doc-as-code-repo-url
+        image: squidfunk/mkdocs-material
+        imagePullPolicy: IfNotPresent
+        name: doc-as-code-builder
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: website-docs
+      restartPolicy: Never
+      volumes:
+      - name: website-docs
+        persistentVolumeClaim:
+          claimName: website-pvc
+

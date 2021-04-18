@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/component: webserver
+    app.kubernetes.io/name: doc-as-code-nginx
+    app.kubernetes.io/part-of: doc-as-code
+  name: doc-as-code-nginx
+  namespace: doc-as-code
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: webserver
+      app.kubernetes.io/name: doc-as-code-nginx
+      app.kubernetes.io/part-of: doc-as-code
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: webserver
+        app.kubernetes.io/name: doc-as-code-nginx
+        app.kubernetes.io/part-of: doc-as-code
+    spec:
+      containers:
+      - image: nginx:stable-alpine
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: http-tcp
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html
+          name: webdocs
+          readOnly: true
+      volumes:
+      - name: webdocs
+        persistentVolumeClaim:
+          claimName: website-pvc
+

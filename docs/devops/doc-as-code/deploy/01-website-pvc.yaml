@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/name: doc-as-code-pvc
+    app.kubernetes.io/part-of: doc-as-code
+  name: website-pvc
+  namespace: doc-as-code
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+
