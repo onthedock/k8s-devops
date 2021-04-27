@@ -196,7 +196,7 @@ time="2021-04-07T19:08:35Z" level=info msg="restore completed" logSource="pkg/co
 
 Velero es una de esas herramientas que hace una cosa y la hace bien; a través del uso de unos pocos *Custom Resources*, Velero realiza copias de seguridad de manera sencilla y a la vez, flexible, permitiendo incluir o excluir elementos durante el *backup* o los *restores*.
 
-La posibilidad de programar las copias de seguridad como una tarea usando un *Job* permite integrar esta la configuracón de los *backups* en el proceso de despliegue de cualquier aplicación en un entorno productivo.
+La posibilidad de programar las copias de seguridad como una tarea usando un *Job* permite integrar la configuracón de los *backups* en el proceso de despliegue de cualquier aplicación en un entorno productivo.
 
 Para las tareas de consulta de las copias disponibles lanzar un *Job* puede parece un poco *overkill*, pero permte tener un "registro" de cualquier acción realizada en el clúster y se puede integrar en la metodología "GitOps".
 
@@ -206,5 +206,4 @@ El único *inconveniente*, por ponerle alguna pega a Velero, es que no es posibl
 
 > Here’s a list the API types that have some functionality that you can only configure via json/yaml vs the velero cli (hooks)
 
-Pese a este inconveniente menor, la funcionalidad y la simplicidad con lo que Velero permite realizar copias de seguridad y restauraiones del clúster convierte a [Velero](https://velero.io/) en una herramienta imprescindible.
-
+Pese a este inconveniente menor, la funcionalidad y la simplicidad con lo que Velero permite realizar copias de seguridad y restauraciones del clúster convierte a [Velero](https://velero.io/) en una herramienta imprescindible.
