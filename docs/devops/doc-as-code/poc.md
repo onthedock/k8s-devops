@@ -32,7 +32,7 @@ metadata:
 
 El *Persistent Volume Claim* `website-pvc` se monta en los *Pods* basados en Nginx en modo *read only* (el servidor web no necesita modificar ninguno de los ficheros).
 
-Al crear un *PVC*, si no especificamos una *storageClass*, se usa la *storageClass*  por defecto especificada en el clúster. En el caso de K3S, se usa [local-path](https://github.com/rancher/local-path-provisioner/blob/master/README.md), que permite la provisión dinámica basada en las caraterísticas del volumen nativo de tipo `local` de Kubernetes. La *storageClass* `local-path` permite provisionar volúmenes de tipo `hostPath` de forma dinámica.
+Al crear un *PVC*, si no especificamos una *storageClass*, se usa la *storageClass*  por defecto especificada en el clúster. En el caso de K3S, se usa [local-path](https://github.com/rancher/local-path-provisioner/blob/master/README.md), que permite la provisión dinámica basada en las características del volumen nativo de tipo `local` de Kubernetes. La *storageClass* `local-path` permite provisionar volúmenes de tipo `hostPath` de forma dinámica.
 
 > `local-path` no soporta el *accessMode* `ReadOnlyMany`.
 
@@ -136,7 +136,7 @@ spec:
 
 ### Ingress
 
-En K3S el *Ingress Controller* desplegado por defeto es [Traefik](https://doc.traefik.io/traefik/).
+En K3S el *Ingress Controller* desplegado por defecto es [Traefik](https://doc.traefik.io/traefik/).
 
 > Para que esta configuración funcione debemos añadir una entrada en el fichero `hosts` (o en el DNS) para que el nombre definido en `spec.rules.host` sea resoluble.
 
