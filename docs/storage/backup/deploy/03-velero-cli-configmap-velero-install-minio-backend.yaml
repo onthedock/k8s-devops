@@ -1,0 +1,14 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  namespace: velero-cli
+  name: velero-install-config
+  labels:
+    app: velero-cli
+data:
+  PROVIDER: aws
+  PLUGIN: velero/velero-plugin-for-aws:v1.1.0
+  BUCKET: velero-backup
+  BACKUP_LOCATION_CONFIG_URL: http://minio.minio.svc:9000
+  SNAPSHOT_LOCATION_CONFIG_URL: http://minio.minio.svc:9000

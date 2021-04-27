@@ -1,0 +1,22 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  labels:
+      app: backup-nginx
+  namespace: velero-cli
+  generateName: velero-schedule-backup-
+spec:
+  template:
+    metadata:
+      labels:
+        app: backup-nginx
+    spec:
+      serviceAccount: velerocli
+      restartPolicy: Never
+      containers:
+        - name: velero-schedule-backup
+          image: docker.io/xaviaznar/velero-cli:1.5.3
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "velero schedule create nginx-backups --schedule='*/5 * * * *' --include-namespaces nginx"]

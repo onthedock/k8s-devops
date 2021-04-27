@@ -1,0 +1,22 @@
+---
+kind: Job
+apiVersion:  batch/v1
+metadata:
+  labels:
+      app: backup-nginx
+  namespace: velero-cli
+  generateName: velero-backup-logs-
+spec:
+  template:
+    metadata:
+      labels:
+        app: backup-nginx
+    spec:
+      serviceAccount: velerocli
+      restartPolicy: Never
+      containers:
+        - name: velero-backup-logs
+          image: docker.io/xaviaznar/velero-cli:1.5.3
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/sh"]
+          args: ["-c", "velero backup logs nginx-backup"]
