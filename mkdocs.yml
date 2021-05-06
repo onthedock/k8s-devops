@@ -68,7 +68,6 @@ theme:
     - navigation.tabs
 
 markdown_extensions:
-  - markdown.extensions.codehilite:
-      guess_lang: false
-      linenums: true
+  - pymdownx.highlight
+  - pymdownx.superfences # Required by highlight
   - markdown.extensions.footnotes
