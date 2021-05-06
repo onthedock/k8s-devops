@@ -32,7 +32,7 @@ metadata:
 
 El *Persistent Volume Claim* `website-pvc` se monta en los *Pods* basados en Nginx en modo *read only* (el servidor web no necesita modificar ninguno de los ficheros).
 
-Al crear un *PVC*, si no especificamos una *storageClass*, se usa la *storageClass*  por defecto especificada en el clúster. En el caso de K3S, se usa [local-path](https://github.com/rancher/local-path-provisioner/blob/master/README.md), que permite la provisión dinámica basada en las caraterísticas del volumen nativo de tipo `local` de Kubernetes. La *storageClass* `local-path` permite provisionar volúmenes de tipo `hostPath` de forma dinámica.
+Al crear un *PVC*, si no especificamos una *storageClass*, se usa la *storageClass*  por defecto especificada en el clúster. En el caso de K3S, se usa [local-path](https://github.com/rancher/local-path-provisioner/blob/master/README.md), que permite la provisión dinámica basada en las características del volumen nativo de tipo `local` de Kubernetes. La *storageClass* `local-path` permite provisionar volúmenes de tipo `hostPath` de forma dinámica.
 
 > `local-path` no soporta el *accessMode* `ReadOnlyMany`.
 
@@ -131,7 +131,7 @@ spec:
   selector:
     app.kubernetes.io/name: doc-as-code-nginx
     app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: doc-as-code  
+    app.kubernetes.io/part-of: doc-as-code
 ```
 
 ### Ingress
