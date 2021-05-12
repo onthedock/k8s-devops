@@ -69,6 +69,8 @@ theme:
     - navigation.tabs
 
 markdown_extensions:
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      linenums: true
   - pymdownx.superfences # Required by highlight
   - markdown.extensions.footnotes
+  - pymdownx.snippets
