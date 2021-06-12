@@ -1,14 +1,16 @@
 site_name: Kubernetes DevOps
+site_url: ""
+use_directory_urls: false
 
 nav:
   - Recomendaciones:                                          index.md
   - Tooling:                                                  map/map.md
   - Platform:      
-  - k3d:
+    - k3d:     
       - Instalación:                                          platform/k3d/instalacion.md
       - Crear un clúster:                                     platform/k3d/crear-cluster.md
   - DevOps:
-      - Documentación como código:
+    - Documentación como código:
       - Prueba de concepto con MkDocs:                        devops/doc-as-code/poc.md
       - ArgoCD:
         - Despliegue:                                         devops/argocd/argocd.md
@@ -30,18 +32,18 @@ nav:
     - Componentes de Prometheus:                              monitoring/prometheus-componentes.md
     - Despliegue de Grafana:                                  monitoring/grafana.md
   - Storage:
-      - MinIO:
+    - MinIO:
       - Instalación de MinIO:                                 storage/minio/instalacion-de-minio.md
       - Uso del cliente de MinIO mc:                          storage/minio/uso-del-cliente-de-minio-mc.md
-      - Velero:
+    - Velero: 
       - Instalación de Velero:                                storage/backup/instalacion-de-velero.md
       - Crear copia de seguridad:                             storage/backup/crear-copia-de-seguridad.md
       - Recuperar copia de seguridad:                         storage/backup/recuperar-copia-de-seguridad.md
   - Seguridad:
-      - Kube-linter:                    
+    - Kube-linter:                   
       - KubeLinter:                                           seguridad/kube-linter/kube-linter.md
       - Uso de KubeLinter:                                    seguridad/kube-linter/usando-kube-linter.md
-      - OpenLDAP:
+    - OpenLDAP:           
       - Despliegue de OpenLDAP:                               seguridad/openldap/despliegue-de-openldap.md
   - Conceptos de Kubernetes:
     - Descripción general:                                    kubernetes/descripcion-general.md
@@ -50,14 +52,14 @@ nav:
     - Volumes:                                                kubernetes/volumes.md
   
   - Apps básicas:
-      - MySQL:
+    - MySQL:
       - MySQL (sólo 1 réplica):                               appsbasicas/mysql/mysql-1-replica.md
   - Git:
-      - Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
-      - Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
-      - Combinar commits (squash):                              git/combinar-commits.md
-      - Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
-      - Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
+    - Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
+    - Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
+    - Combinar commits (squash):                              git/combinar-commits.md
+    - Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
+    - Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
   - Mkdocs:
     - Configuración básica:                                   mkdocs/basic-setup.md
     - Servidor de desarrollo:                                 mkdocs/servidor-de-desarrollo.md
