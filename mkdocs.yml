@@ -14,6 +14,8 @@ nav:
         Tekton:                     devops/tekton/overview.md
         Despliegue de Tekton:       devops/tekton/deploy-tekton.md
         CI/CD con Tekton:           devops/tekton/first-workflow.md
+      Helm:
+        Helm Secrets:               devops/helm/helm-secrets.md
       Documentación como código:
         Prueba de concepto con MkDocs:         devops/doc-as-code/poc.md
   - Monitoring:
