@@ -131,7 +131,7 @@ spec:
   selector:
     app.kubernetes.io/name: doc-as-code-nginx
     app.kubernetes.io/component: webserver
-    app.kubernetes.io/part-of: doc-as-code  
+    app.kubernetes.io/part-of: doc-as-code
 ```
 
 ### Ingress

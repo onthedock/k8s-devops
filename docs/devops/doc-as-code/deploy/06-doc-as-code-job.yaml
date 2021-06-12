@@ -38,4 +38,3 @@ spec:
       - name: website-docs
         persistentVolumeClaim:
           claimName: website-pvc
-

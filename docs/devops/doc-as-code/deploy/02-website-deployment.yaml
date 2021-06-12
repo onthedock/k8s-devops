@@ -37,4 +37,3 @@ spec:
       - name: webdocs
         persistentVolumeClaim:
           claimName: website-pvc
-

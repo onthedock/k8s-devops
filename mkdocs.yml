@@ -2,59 +2,67 @@ site_name: Kubernetes DevOps
 
 nav:
   - Recomendaciones:                index.md
+  - Mapa de herramientas:           map/map.md
   - k3d:
-      Instalación:                  k3d/instalacion.md
-      Crear un clúster:             k3d/crear-cluster.md
+      - Instalación:                  k3d/instalacion.md
+      - Crear un clúster:             k3d/crear-cluster.md
   - DevOps:
-      ArgoCD:
-        Despliegue:                 devops/argocd/argocd.md
-        Acceso a la consola:        devops/argocd/acceso-consola.md
-        Nueva aplicación:           devops/argocd/nueva-aplicacion.md
-      Tekton:
-        Tekton:                     devops/tekton/overview.md
-        Despliegue de Tekton:       devops/tekton/deploy-tekton.md
-        CI/CD con Tekton:           devops/tekton/first-workflow.md
       Helm:
-        Helm Secrets:               devops/helm/helm-secrets.md
+
       Documentación como código:
         Prueba de concepto con MkDocs:         devops/doc-as-code/poc.md
+      - ArgoCD:
+          - Despliegue:                 devops/argocd/argocd.md
+          - Acceso a la consola:        devops/argocd/acceso-consola.md
+          - Nueva aplicación:           devops/argocd/nueva-aplicacion.md
+      - Tekton:
+          - Tekton:                     devops/tekton/overview.md
+          - Despliegue de Tekton:       devops/tekton/deploy-tekton.md
+          - CI/CD con Tekton:           devops/tekton/first-workflow.md
+      - Documentación como código:
+          - Prueba de concepto con MkDocs:         devops/doc-as-code/poc.md
+      - Helm:
+        - Helm Secrets:                            devops/helm/helm-secrets.md
+        - Gitea:
+          - Analisis de la Chart para Gitea:       devops/helm/gitea/gitea-analisis.md
+          - Instalación de la Chart para Gitea :   devops/helm/gitea/gitea-instalacion.md
   - Monitoring:
-      Despliegue de Prometheus:     monitoring/prometheus.md
-      Componentes de Prometheus:    monitoring/prometheus-componentes.md
-      Despliegue de Grafana:        monitoring/grafana.md
+      - Despliegue de Prometheus:     monitoring/prometheus.md
+      - Componentes de Prometheus:    monitoring/prometheus-componentes.md
+      - Despliegue de Grafana:        monitoring/grafana.md
   - Storage:
-      MinIO:
-        - Instalación de MinIO:         storage/minio/instalacion-de-minio.md
-        - Uso del cliente de MinIO mc:  storage/minio/uso-del-cliente-de-minio-mc.md
-      Velero:
-        - Instalación de Velero:        storage/backup/instalacion-de-velero.md
-        - Crear copia de seguridad:     storage/backup/crear-copia-de-seguridad.md
-        - Recuperar copia de seguridad: storage/backup/recuperar-copia-de-seguridad.md
+      - MinIO:
+          - Instalación de MinIO:         storage/minio/instalacion-de-minio.md
+          - Uso del cliente de MinIO mc:  storage/minio/uso-del-cliente-de-minio-mc.md
+      - Velero:
+          - Instalación de Velero:        storage/backup/instalacion-de-velero.md
+          - Crear copia de seguridad:     storage/backup/crear-copia-de-seguridad.md
+          - Recuperar copia de seguridad: storage/backup/recuperar-copia-de-seguridad.md
   - Seguridad:
-        Kube-linter:                    
-          KubeLinter:                  seguridad/kube-linter/kube-linter.md
-          Uso de KubeLinter:           seguridad/kube-linter/usando-kube-linter.md
-        OpenLDAP:
-          Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
+      - Kube-linter:                    
+          - KubeLinter:                  seguridad/kube-linter/kube-linter.md
+          - Uso de KubeLinter:           seguridad/kube-linter/usando-kube-linter.md
+      - OpenLDAP:
+          - Despliegue de OpenLDAP:      seguridad/openldap/despliegue-de-openldap.md
 
   - Conceptos de Kubernetes:
-      Descripción general:          kubernetes/descripcion-general.md
-      Comandos útiles:              kubernetes/comandos-utiles.md
-      Pods:                         kubernetes/pod.md
-      Volumes:                      kubernetes/volumes.md
+      - Descripción general:          kubernetes/descripcion-general.md
+      - Comandos útiles:              kubernetes/comandos-utiles.md
+      - Pods:                         kubernetes/pod.md
+      - Volumes:                      kubernetes/volumes.md
   
   - Apps básicas:
-      MySQL:
-        MySQL (sólo 1 réplica):     appsbasicas/mysql/mysql-1-replica.md
+      - MySQL:
+          - MySQL (sólo 1 réplica):     appsbasicas/mysql/mysql-1-replica.md
   - Git:
-      Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
-      Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
-      Combinar commits (squash):                              git/combinar-commits.md
-      Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
-      Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
+      - Deshacer último commit local:                           git/deshacer-ultimo-commit-local.md
+      - Comparar fichero entre dos ramas:                       git/comparar-fichero-entre-dos-ramas.md
+      - Combinar commits (squash):                              git/combinar-commits.md
+      - Ejemplo realista sobre cómo combinar commits (squash):  git/ejemplo-combinar-commits.md
+      - Combinar commits al hacer merge:                        git/combinar-commits-al-hacer-merge.md
   - Mkdocs:
-      Configuración básica:         mkdocs/basic-setup.md
-      Servidor de desarrollo:       mkdocs/servidor-de-desarrollo.md
+      - Configuración básica:         mkdocs/basic-setup.md
+      - Servidor de desarrollo:       mkdocs/servidor-de-desarrollo.md
   - Referencias:                    referencias.md
 
 # Repo Information
@@ -70,7 +78,8 @@ theme:
     - navigation.tabs
 
 markdown_extensions:
-  - markdown.extensions.codehilite:
-      guess_lang: false
+  - pymdownx.highlight:
       linenums: true
+  - pymdownx.superfences # Required by highlight
   - markdown.extensions.footnotes
+  - pymdownx.snippets
