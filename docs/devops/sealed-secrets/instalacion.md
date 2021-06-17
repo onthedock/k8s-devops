@@ -254,6 +254,79 @@ $ echo -n cGF0YXRh | base64 -d
 patata
 ```
 
+Además, del *secret*, en el *namespace* también se ha creado un CRD de tipo *SealedSecret*:
+
+```bash
+$ k get secrets,sealedsecrets -n default
+NAME                         TYPE                                  DATA   AGE
+secret/default-token-sj8mh   kubernetes.io/service-account-token   3      84d
+secret/dummy-credentials     Opaque                                2      25m
+
+NAME                                         AGE
+sealedsecret.bitnami.com/dummy-credentials   25m
+```
+
+Revisando el contenido del *SealedSecret*:
+
+```yaml
+$ k get secrets,sealedsecrets -n default
+NAME                         TYPE                                  DATA   AGE
+secret/default-token-sj8mh   kubernetes.io/service-account-token   3      84d
+secret/dummy-credentials     Opaque                                2      25m
+
+NAME                                         AGE
+sealedsecret.bitnami.com/dummy-credentials   25m
+operador@k3s:~$ k describe sealed-secret dummy-credentials 
+error: the server doesn't have a resource type "sealed-secret"
+operador@k3s:~$ k describe sealedsecret dummy-credentials 
+Name:         dummy-credentials
+Namespace:    default
+Labels:       <none>
+Annotations:  <none>
+API Version:  bitnami.com/v1alpha1
+Kind:         SealedSecret
+Metadata:
+  Creation Timestamp:  2021-06-17T20:53:18Z
+  Generation:          3
+  Managed Fields:
+    API Version:  bitnami.com/v1alpha1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:spec:
+    Manager:      kubectl-create
+    Operation:    Update
+    Time:         2021-06-17T20:53:18Z
+    API Version:  bitnami.com/v1alpha1
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .:
+          f:kubectl.kubernetes.io/last-applied-configuration:
+      f:spec:
+        f:encryptedData:
+        f:template:
+    Manager:         kubectl-client-side-apply
+    Operation:       Update
+    Time:            2021-06-17T21:00:04Z
+  Resource Version:  352873
+  UID:               aa797c53-6341-4e55-9574-5904d0811dbe
+Spec:
+  Encrypted Data:
+    Password:  AgAf9ESoYVSWTl6FKfOq+W61+LWP75NpfiPogiOgOBa04A2dtC8hxxaSjnh7T209pABBHJiWCMBnUv8yILGVL+MGD7iCcogdaD+3G7zS8ucn8zUe4SCx3kuzkOfsfylUIw08qaKVFO/9Oc6qoA2mV1Olc5FAm5AcGg0pppFq1Y18L22dfD0By5BA0cAl+rCp210e2X93r1CfCqWBvFMFEKQHRJ4dnp5CXicOg1vxYh+r65shUkfWvhcLd1rZfIiLWC38Z8pxppgXQlD8/o6zqPit+Pvub+OmhR+vq3k6JBtLCAmnicUjTMqc+tMqfHdq0TLZDoN+KtScPt+0BOrzgVbAqBxvh3VMZCWjL9Oo8JtEcca23gZB4kNrrETcOF0Eldl+Q3WvqKDK+mRB7YlkgOnu6brpxvRBgcjjavtPyxQjdLp+WAghKA0yh0iTZ+IjA5vFSZhIhfLhF25YJWCL85Bt/GBfoxDKD4Nd1BlTEd4OPxgtIw05MCkDHdLt1v8n/JwTPx98msZiyj7GmJe6gxfrYu8vH6xbxUkpOsupF/mLbiMICGodfaRTWnpmqP/BLrPu0+UxFXiYcbAYL+P1BbWK4xACY/p4Y0I2Jbp7KUifMvln4+bP7G2owmglkq9nGDfTdJhascANJ5jQjLogo5DBrpxmkI/unRK6R/PUuuf8ZEuu2VPLyEJFa9SFmCXZC+tr0fbZGec=
+    Username:  AgBGh7PiA9e4/Rcxi7irZXC9BiGdW2oZBVI1K18uZ1mChnRLb9kajIZZhNqHCTEj9yubd1qHNeYnWWVm1elHY7uiI4CHV/ixDCcT1gbVHTBJWb4008cffjMtT7eLku+jDdAPF3sospJrHKFxZYWFlOpxfmc8jj9lTkdKktN8Er5lLWJ8imK8YvjffBePsDoKgDGpt93x1px45K6udP+AENNpWYmHIzQns6F3eLX9LPD0xlWNGEijLhwt1LY8U7llcFGpaN26CDgva02dMwvVgmhgAT2MQWD1KqqFFn08bVu7aiYc3efTgijbtbZE5r06C0u02HTDn8l2dqmR5joauEE7FvRuOCg8lOTDgpZUC7bDMPZxTJ0/6w9qS2+9vQXN/AT+bDLtD5h/GoxSCUQYlkMUbTfU8TLE9yv7WyVtNgNRjA0g2FuomrHbaZZaOw5e6EbLYKcBwQJ3g57gHsoYBpnwRaWcQmeeNd/wtpWjd/NsttKosNiqgKXKiotPGdiexMdmdzN238/QpRmgU0Wv3r0xAQbqNOZrVhwZtD+ZcgRgF4Tu2QhaZA8vSpL/FU0zbZ/tePpEXLvrqEr2lHpQtdefZpXIaiR9xD5VMqkmn9zahdC2B6xI8O8RBAAU0iZU9TOK+uL/ffbwml7hJeqJ591S3ra1qHeNTnk39bhsjsZNjQVqVWZntrsWLdOzpT9ZQAw38kZaKQ==
+  Template:
+    Metadata:
+      Labels:
+        Classification:  top-secret
+      Name:              dummy-credentials
+      Namespace:         default
+Events:
+  Type    Reason    Age                From            Message
+  ----    ------    ----               ----            -------
+  Normal  Unsealed  16m (x3 over 26m)  sealed-secrets  SealedSecret unsealed successfully
+```
+
 ### Actualización del *Secret*
 
 Para actualizar el contenido del *secret* (por ejemplo, añadir una etiqueta):
