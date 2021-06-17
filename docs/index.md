@@ -5,12 +5,6 @@
 Cada herramienta se despliega en su propio *namespace*.
 El nombre del *namespace* no es relevante, aunque en general coincide con el nombre de la herramienta.
 
-## Un fichero YAML unificado
-
-Todos los recursos necesarios para el despliegue de la herramienta se definen en un único fichero YAML (en la carpeta `deploy/`).
-
-La definición de los recursos en el fichero se separa mediante `---`, como indica la especificación del formato [YAML](https://yaml.org/).
-
 ## Organización de la documentación
 
 La documentación para cada herramienta se encuentra en una carpeta dentro de MkDocs. La documentación puede dividirse en múltiples ficheros si es necesario.
