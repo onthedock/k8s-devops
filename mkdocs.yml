@@ -77,8 +77,8 @@ theme:
   palette:
     primary: 'blue'
     accent: 'red'
-  features:
-    - navigation.tabs
+  # features:
+  #   - navigation.tabs
 
 markdown_extensions:
   - pymdownx.highlight:
