@@ -30,6 +30,7 @@ nav:
       - Sealed Secrets:
         - Gestión de secretos:                                devops/sealed-secrets/sealed-secrets.md
         - Instalación:                                        devops/sealed-secrets/instalacion.md
+        - Crear SealedSecrets con kubeseal:                   devops/sealed-secrets/crear-sealed-secret.md
   - Monitoring:
     - Despliegue de Prometheus:                               monitoring/prometheus.md
     - Componentes de Prometheus:                              monitoring/prometheus-componentes.md
