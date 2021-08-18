@@ -1,5 +1,13 @@
 # Instalación de *Sealed Secrets*
 
+| Producto | Versión |
+| -- | -- |
+| **kubectl** (`kubectl version --short`) | Client Version: v1.19.4 |
+| (**k3s**) | Server Version: v1.21.2+k3s1 |
+| **Helm** (`helm version --short`) | v3.6.2+gee407bd |
+| **SealedSecrets** | v0.16.0 (*Helm Chart*: 1.16.1) |
+
+
 Hay diversas formas de instalar *Sealed Secrets*; usaremos la instalación usando la *Helm Chart* oficial proporcionada por el equipo de *Sealed Secrets*.
 
 ```bash
