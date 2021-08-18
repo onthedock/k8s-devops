@@ -7,7 +7,6 @@
 | **Helm** (`helm version --short`) | v3.6.2+gee407bd |
 | **SealedSecrets** | v0.16.0 (*Helm Chart*: 1.16.1) |
 
-
 Hay diversas formas de instalar *Sealed Secrets*; usaremos la instalación usando la *Helm Chart* oficial proporcionada por el equipo de *Sealed Secrets*.
 
 ```bash
