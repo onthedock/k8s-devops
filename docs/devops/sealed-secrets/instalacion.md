@@ -1,33 +1,32 @@
-# Instalación
+# Instalación de *Sealed Secrets*
 
-Hay varias formas de instalar *Sealed Secrets*; voy a probar la instalación vía Helm Charts.
-
-> La versión *major* de *SealedSecrets* es `0.x.y`, pero cuando se creó la *Helm Chart* se adoptó la *major version* `1.x.y`.
-
-## Añadir el *repo*
-
-Añadimos el repositorio donde se encuentran las *charts* de *Sealed Secrets*:
+Hay diversas formas de instalar *Sealed Secrets*; usaremos la instalación usando la *Helm Chart* oficial proporcionada por el equipo de *Sealed Secrets*.
 
 ```bash
-helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+$ helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+
+"sealed-secrets" has been added to your repositories
 ```
 
-## *Namespace* de instalación
-
-*Sealed Secrets* se instala por defecto en el *namespace* `kube-system`.
-
-Es posible instalar *Sealed Secrets* en otro *namespace*, pero entonces es necesario indicarle a `kubeseal` en qué *namesace* se encuentra el controlador.
-
-[How to use kubeseal if the controller is not running within the kube-system namespace?](https://github.com/bitnami-labs/sealed-secrets#how-to-use-kubeseal-if-the-controller-is-not-running-within-the-kube-system-namespace)
-
-Para probar el funcionamiento de *Sealed Secrets*, empezaremos usando el despliegue en el *namespace* `kube-system`.
-
-## Instalación con Helm
+Comprobamos que el repositorio se ha añadido correctamente:
 
 ```bash
-$ helm install --namespace kube-system sealed-secrets sealed-secrets/sealed-secrets
-NAME: sealed-secrets
-LAST DEPLOYED: Thu Jun 17 19:33:21 2021
+$ helm repo list | grep -i sealed-secrets
+sealed-secrets          https://bitnami-labs.github.io/sealed-secrets
+```
+
+Actualizamos e instalamos:
+
+```bash
+helm repo update
+```
+
+> `kubeseal` usa como nombre por defecto `sealed-secrets-controller`, por lo que usamos este nombre para desplegar *Sealed Secrets*. De esta forma no hará falta especificar `--controller-name` en cada acción que realicemos con `kubeseal`. Por el mismo motivo, instalamos *Sealed Secrets* en el *namespace* `kube-system`.
+
+```bash
+$ helm install sealed-secrets-controller sealed-secrets/sealed-secrets -n kube-system
+NAME: sealed-secrets-controller
+LAST DEPLOYED: Wed Aug 18 21:23:36 2021
 NAMESPACE: kube-system
 STATUS: deployed
 REVISION: 1
@@ -47,7 +46,7 @@ sudo install -m 755 kubeseal-$GOOS-$GOARCH /usr/local/bin/kubeseal
 # note the use of `--dry-run` - this does not create a secret in your cluster
 kubectl create secret generic secret-name --dry-run --from-literal=foo=bar -o [json|yaml] | \
  kubeseal \
- --controller-name=sealed-secrets \
+ --controller-name=sealed-secrets-controller \
  --controller-namespace=kube-system \
  --format [json|yaml] > mysealedsecret.[json|yaml]
 
@@ -56,7 +55,7 @@ The file mysealedsecret.[json|yaml] is a commitable file.
 If you would rather not need access to the cluster to generate the sealed secret you can run
 
 kubeseal \
- --controller-name=sealed-secrets \
+ --controller-name=sealed-secrets-controller \
  --controller-namespace=kube-system \
  --fetch-cert > mycert.pem
 
@@ -64,7 +63,7 @@ to retrieve the public cert used for encryption and store it locally. You can th
 
 kubectl create secret generic secret-name --dry-run --from-literal=foo=bar -o [json|yaml] | \
 kubeseal \
- --controller-name=sealed-secrets \
+ --controller-name=sealed-secrets-controller \
  --controller-namespace=kube-system \
  --format [json|yaml] --cert mycert.pem > mysealedsecret.[json|yaml]
 
@@ -77,261 +76,106 @@ Running 'kubectl get secret secret-name -o [json|yaml]' will show the decrypted 
 Both the SealedSecret and generated Secret must have the same name and namespace.
 ```
 
-> La versión instalada por Helm, al no haber especificado una versión concreta, es la última disponible 0.16.1.
+## Validamos la instalación
 
-  ```bash
-  $ helm list -n kube-system
-  NAME            NAMESPACE   REVISION  UPDATED                                 STATUS    CHART                   APP VERSION
-  sealed-secrets  kube-system 1         2021-06-17 19:33:21.282839385 +0000 UTC deployed  sealed-secrets-1.16.1   v0.16.0    
-  ```
-
-Con el comando anterior, especificamos a Helm que instale la *chart* en el *namespace* `kube-system`.
+Revisamos los logs del *pod* de *Sealed Secrets* en el *namespace* `kube-system` para verificar que ha arrancado correctamente y que se ejecuta con normalidad:
 
 ```bash
-$ k get pods -n kube-system -l app.kubernetes.io/name=sealed-secrets
-NAME                              READY   STATUS    RESTARTS   AGE
-sealed-secrets-5c6c8564d9-6wv95   1/1     Running   0          2m46s
+$ kubectl get pods -n kube-system \
+  -l app.kubernetes.io/name=sealed-secrets
+NAME                                         READY   STATUS    RESTARTS   AGE
+sealed-secrets-controller-7b649d967c-7zczz   1/1     Running   0          2m47s
 ```
 
-Revisando los logs del *pod*:
-
 ```bash
-$ k logs -n kube-system sealed-secrets-5c6c8564d9-6wv95
+$ kubectl logs \
+  $(kubectl get pods -n kube-system -l app.kubernetes.io/name=sealed-secrets -o jsonpath='{ .items[0].metadata.name }')) \
+  -n kube-system
+
 controller version: v0.16.0
-2021/06/17 19:33:22 Starting sealed-secrets controller version: v0.16.0
-2021/06/17 19:33:22 Searching for existing private keys
-2021/06/17 19:33:25 New key written to kube-system/sealed-secrets-key22jmj
-2021/06/17 19:33:25 Certificate is 
+2021/08/18 19:23:50 Starting sealed-secrets controller version: v0.16.0
+2021/08/18 19:23:50 Searching for existing private keys
+2021/08/18 19:23:54 New key written to kube-system/sealed-secrets-keylr2w9
+2021/08/18 19:23:54 Certificate is 
 -----BEGIN CERTIFICATE-----
-MIIErTCCApWgAwIBAgIQfJHsmEOOjEwwvRW/hKt6mjANBgkqhkiG9w0BAQsFADAA
-MB4XDTIxMDYxNzE5MzMyNVoXDTMxMDYxNTE5MzMyNVowADCCAiIwDQYJKoZIhvcN
-AQEBBQADggIPADCCAgoCggIBAJzbVbDyveQ0G7NuUNu+F75Wt/QXHrDZj6qDZ1nG
-xLA5+GYsWtVAx/0rseFu5+R4GDzVE0H3PryptVPp3cGmh7JzlaBUh6XlBM2fYnmF
-Kr+5Po+pdrs5aPS2w1dfyNR8D7I4GUSvV9cJZuK61H4hwnM5UFFz3n+BF9fPGqmS
-3i3OisPTD4cwjdKjtA61bw2l/ICjXlq61bQjk6ohDnJlrZKjPfm4PkZ999GPDg4C
-+nQxlBDg9jabMCl6+vNAWGzhdFdpbLG1llLUUzZmzHRJR7AQKv6cWtIErFTglU/g
-k+FPInkdXnB3D6KqhocfOBVhpigTC/9EazMQOQXBNH+W/lf1DaYHdVmq+xuMbAVG
-bK7qRmUeKl0Uzqw8dpfRNsnGuvRXfq3MP9gQMdT5bbjoCD5KvBWJztKd4m3ATyvK
-6zqc5j1yRJOYdnyGCzYXK3rmQ4ao+u+siJWI2Es6fSh+1gv9fugeS6k9Qxg8HmNy
-XUpnwkuvV/3ijzpyh1Stm0/xlBmpnEUMfN80OfeeBx95CuCfk9AnSc5+zZt/FYjH
-J4wQNwHzbo0AJW6DeMC9kQRLI2oaxKoxhv+wx0Dob5QOe6CLyJxZirE2jY8RXCoY
-DWWv/ntE8+IMbpqMtzivmn03zJe3Imxnhf/79FWh8iP78g9ERNSbFI0ZGmRTS4yT
-4c7jAgMBAAGjIzAhMA4GA1UdDwEB/wQEAwIAATAPBgNVHRMBAf8EBTADAQH/MA0G
-CSqGSIb3DQEBCwUAA4ICAQBH4NSmVmmTmRxNTi23Xm5hlsT6klSlckkfPkHtD7Iy
-TjhqSvKYZg7u1KoL11Usii4erzy9mduOm6WLKQDMPOP8wWpsI2Qe4ATOHgHPz7bB
-ZhXwcbZZZVrmAUOqVJysjxsCIyNR2QqBVEiUT7275lPD7+fJPNFl6ceZ3xF1WIRO
-2O3zwE5ykHfOS4siuD9XtaSIQmDK9HysvafzZMdqjvi4pc2B1MS6TU7HuAxW41IB
-H7OoBXkMo0BN/eVq4j1A6eUgXYbpzW6G7+DC3lIzmycKsv/Sq38WbHgaxYoBfqaH
-rUmLAxh5Vd+oRNSWSnq9IgYycyAct5d13Mta/ZVSKg0tBZf96EIQ/sD8sbRuk6ex
-GT5vim3ywcIS7LEQvNHlUJTDD7OaaVUtH/GcD7TX4+Ti5T/JPT2R0dxOjpI0YJF2
-d2n99vGp/QVaFk8mOCpQOQrQytHbr65dPp3UdkXBynxYZNdCtUyF3v5MHu0lrMUG
-TF2Q2t0TxdOnVltFj1xNRAlRLg17Q1oLPbT5ja5GDiT2xzrdlfNMMcUTeuvGEDeg
-W6ZLzNJER7qOCiPdTcIRpYJoCkjdn2xWN029dh7ni2CSvfSuX2xKBy61+pw+bwSm
-D/mssx411XJMV/0QywEvezLxbSc8+RWDbt1WpuncvUcAN3YbqFf3iGJa3CwUpkQr
-mA==
+MIIErTCCApWgAwIBAgIQBiQc7Z+Z8n8xtYME0Bs40jANBgkqhkiG9w0BAQsFADAA
+MB4XDTIxMDgxODE5MjM1NFoXDTMxMDgxNjE5MjM1NFowADCCAiIwDQYJKoZIhvcN
+AQEBBQADggIPADCCAgoCggIBANh5a5otzFHEPfMrDJPFhZIR0fQ+7HLSmZb6EOxQ
+NbI4uV/L06Icq+K28deCCPQgp2GTnVO2oMJql/fMbkYCSWZMmRSIXKdBZca8dJOJ
+WUxOYQ66qS1p2iLJl9NmClXZp2GMxzQbrBRRwss4TdW+Y+zj0YY5VzxbYxz3NRt6
+/3fUfOEl9J5zsfJp/uY/HnfWrtHu1lZjmwj/zabd/D+Guw3cdQ07UdQ1B9FhZBzu
++/sf0DGLA/FRo0uOE8q/uTiY+l0GqyJeM3WxjrFSEF+WBgdbE26OaIeE+w9yOENq
+8dsyCxqkI+Oa5xtFkBaN8T6dLJTlubdzq2ioohnlPOUQymK5Tct5/EhvFtAAczij
+/Ko2nDBFIw9HFMtXOBkeDsRDyIllO+e+BOxYsmxQV8b6CzmwrfAOQ2MbaT7v/78H
+E8cWu6viRwbKdrCuR8Y30JgG6LlXKTKSRyXmirAhRpTkRcbu0E8kQOA9uwkDDrmP
+b6ScO7CJcnDlA4eWxvL4D6Oik7f94TpbKbpG07bSLh4HNIJ+V8gxnT3FWE8BAEtH
+sR0lFBvewVeZhD6okvbN40vJFhV36Imx4suJ7DjdudGqrCVc2XyMt8ezQDRWADy+
+MlNOFxpTe8xp6HUpHWohZ2yPk3biBQhTBdx5nacmwzmoI8zsxP/vk/8KV6bnsT1a
+Bv5HAgMBAAGjIzAhMA4GA1UdDwEB/wQEAwIAATAPBgNVHRMBAf8EBTADAQH/MA0G
+CSqGSIb3DQEBCwUAA4ICAQAou/AreNf51u9HwGoxctCdxVx6hvCjwh/7SCMQ0dJ5
+zq52y6EOR0ZXOZ+ZllUkZb0PMv3jMjpVfYo4AlzpoMS9jEfsPN/AvHf2z71VzJvM
+S7Qbldia6/4+MqpKjRISffW1BsAZTthAlKilDBo9+o8gioqqhMYgcvnaRduLMlYB
+1dgv4X6pwTWzuASkQ6V5VrixQMa76GtRY/we/p3HfE7+af2McgpmAv8xSawUF4sV
+g86ll4Hxy4U3tFjNo7iDs8upBuwc3AdvqYyBuh4l7RbxFtk1/LkZLnMhAUNI1gKr
+nLS1uWiyoe+sgjip2JG9aAQoRiRXPwAN5aQgx1alQ1pLqacn78I6WC1nJENMYpYU
+otSyOtxvN4oyw1ZDp3M1dEcGfiU4MT7G3ocG43QWj8lpY8UyMbZYTAU98kcmlmw5
+W/xcCMuQm5YN+S3ooZcIxxO2jKJ2qNCRjfiHyMWyPRRl7aLgepozn8UmWsY7OOps
+wSJXt8RFoOdXTSRQJLkXI5jtFMkkEYk9p0mYJTiRt1fpavtQ/gnSr+H7CW+II4Q6
+zv3i7m2URtlkO8E348vaakjuVziJ18dJtDkyOcWKuo+fI47v57N49opvkVcoSFmP
+GEQNRr+qeaJqUYguD2F5a6Mm1lIquZPI/UdmeHnfIs+CHWmcG5itvvNGhbxb8ALu
+aA==
 -----END CERTIFICATE-----
 
-2021/06/17 19:33:25 HTTP server serving on :8080
+2021/08/18 19:23:54 HTTP server serving on :8080
 ```
 
-Como se indica en los logs, el par de claves se ha almacenado en un *secret* en el *namespace* `kube-system`. El *secret* creado es de tipo `tls` y contiene el certificado mostrado en los logs (la parte pública) en el campo `tls.crt`, mientras que la parte privada se encuentra en `tls.key`.
+En los logs del *pod* del controlador de *Sealed Secrets* vemos la clave pública del par de claves generados durante el primer arranque.
 
-Finalmente, verificamos que tenemos un nuevo CRD en el clúster:
+Esta es la clave pública que se usará para sellar los `SealedSecrets`.
+
+El par de claves generados por el controlador se almacena en un *Secret* (de tipo TLS):
 
 ```bash
-$ k get crd | grep -i secret
-sealedsecrets.bitnami.com           2021-06-17T19:29:48Z
+$ kubectl get secrets -n kube-system \
+  -l sealedsecrets.bitnami.com/sealed-secrets-key=active
+NAME                      TYPE                DATA   AGE
+sealed-secrets-keylr2w9   kubernetes.io/tls   2      12m
 ```
 
-## Instalación del cliente `kubeseal`
-
-Una vez tenemos desplegado *SealedSecrets* en el clúster, descargamos la parte cliente `kubeseal`.
-
-Las instrucciones se encuentran en la página de [*releases*](https://github.com/bitnami-labs/sealed-secrets/releases) de *SealedSecrets* en GitHub.
+Podemos obtener la clave pública de este *Secret*:
 
 ```bash
-wget https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.16.0/kubeseal-linux-amd64 -O kubeseal
-sudo install -m 755 kubeseal /usr/local/bin/kubeseal
+$ kubectl  get secret \
+  $(kubectl get secret -n kube-system -l sealedsecrets.bitnami.com/sealed-secrets-key=active -o jsonpath='{ .items[0].metadata.name }') \
+  -n kube-system -o jsonpath='{ .data.tls\.crt }' | base64 -d
+-----BEGIN CERTIFICATE-----
+MIIErTCCApWgAwIBAgIQBiQc7Z+Z8n8xtYME0Bs40jANBgkqhkiG9w0BAQsFADAA
+MB4XDTIxMDgxODE5MjM1NFoXDTMxMDgxNjE5MjM1NFowADCCAiIwDQYJKoZIhvcN
+AQEBBQADggIPADCCAgoCggIBANh5a5otzFHEPfMrDJPFhZIR0fQ+7HLSmZb6EOxQ
+NbI4uV/L06Icq+K28deCCPQgp2GTnVO2oMJql/fMbkYCSWZMmRSIXKdBZca8dJOJ
+WUxOYQ66qS1p2iLJl9NmClXZp2GMxzQbrBRRwss4TdW+Y+zj0YY5VzxbYxz3NRt6
+/3fUfOEl9J5zsfJp/uY/HnfWrtHu1lZjmwj/zabd/D+Guw3cdQ07UdQ1B9FhZBzu
++/sf0DGLA/FRo0uOE8q/uTiY+l0GqyJeM3WxjrFSEF+WBgdbE26OaIeE+w9yOENq
+8dsyCxqkI+Oa5xtFkBaN8T6dLJTlubdzq2ioohnlPOUQymK5Tct5/EhvFtAAczij
+/Ko2nDBFIw9HFMtXOBkeDsRDyIllO+e+BOxYsmxQV8b6CzmwrfAOQ2MbaT7v/78H
+E8cWu6viRwbKdrCuR8Y30JgG6LlXKTKSRyXmirAhRpTkRcbu0E8kQOA9uwkDDrmP
+b6ScO7CJcnDlA4eWxvL4D6Oik7f94TpbKbpG07bSLh4HNIJ+V8gxnT3FWE8BAEtH
+sR0lFBvewVeZhD6okvbN40vJFhV36Imx4suJ7DjdudGqrCVc2XyMt8ezQDRWADy+
+MlNOFxpTe8xp6HUpHWohZ2yPk3biBQhTBdx5nacmwzmoI8zsxP/vk/8KV6bnsT1a
+Bv5HAgMBAAGjIzAhMA4GA1UdDwEB/wQEAwIAATAPBgNVHRMBAf8EBTADAQH/MA0G
+CSqGSIb3DQEBCwUAA4ICAQAou/AreNf51u9HwGoxctCdxVx6hvCjwh/7SCMQ0dJ5
+zq52y6EOR0ZXOZ+ZllUkZb0PMv3jMjpVfYo4AlzpoMS9jEfsPN/AvHf2z71VzJvM
+S7Qbldia6/4+MqpKjRISffW1BsAZTthAlKilDBo9+o8gioqqhMYgcvnaRduLMlYB
+1dgv4X6pwTWzuASkQ6V5VrixQMa76GtRY/we/p3HfE7+af2McgpmAv8xSawUF4sV
+g86ll4Hxy4U3tFjNo7iDs8upBuwc3AdvqYyBuh4l7RbxFtk1/LkZLnMhAUNI1gKr
+nLS1uWiyoe+sgjip2JG9aAQoRiRXPwAN5aQgx1alQ1pLqacn78I6WC1nJENMYpYU
+otSyOtxvN4oyw1ZDp3M1dEcGfiU4MT7G3ocG43QWj8lpY8UyMbZYTAU98kcmlmw5
+W/xcCMuQm5YN+S3ooZcIxxO2jKJ2qNCRjfiHyMWyPRRl7aLgepozn8UmWsY7OOps
+wSJXt8RFoOdXTSRQJLkXI5jtFMkkEYk9p0mYJTiRt1fpavtQ/gnSr+H7CW+II4Q6
+zv3i7m2URtlkO8E348vaakjuVziJ18dJtDkyOcWKuo+fI47v57N49opvkVcoSFmP
+GEQNRr+qeaJqUYguD2F5a6Mm1lIquZPI/UdmeHnfIs+CHWmcG5itvvNGhbxb8ALu
+aA==
+-----END CERTIFICATE-----
 ```
 
-Validamos el cliente:
-
-```bash
-$ kubeseal --version
-kubeseal version: v0.16.0
-```
-
-## Creación de un *SealedSecret*
-
-Creamos el *manifest* de un *secret* desde la línea de comando usando `--dry-run`:
-
-```bash
-$ k create secret generic dummy-credentials --dry-run=client \
->  --from-literal=username=admin \
->  --from-literal=password=patata -o yaml | tee dummy-credentials.yaml
-apiVersion: v1
-data:
-  password: cGF0YXRh
-  username: YWRtaW4=
-kind: Secret
-metadata:
-  creationTimestamp: null
-  name: dummy-credentials
-```
-
-El siguiente paso es crear el *SealedSecret* usando `kubeseal`:
-
-> Aunque hemos desplegado *SealedSecrets* usando la opción `--namespace kube-system`, vemos que es necesario especificar tanto el *namespace* como el nombre del controlador.
-
-```bash
-kubeseal --controller-name=sealed-secrets --controller-namespace=kube-system --format yaml < dummy-credentials.yaml > sealed-dummy-credentials.yaml
-```
-
-El resultado es un *manifest* de tipo `SealedSecret`:
-
-```yaml
-$ cat sealed-dummy-credentials.yaml 
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  creationTimestamp: null
-  name: dummy-credentials
-  namespace: default
-spec:
-  encryptedData:
-    password: AgBPjqTkBABQZ4i/t/AcvjlbMqpnt/BIp2RWGzpDRc+7s7Qyju/o75xTcVCVls0i+8Jt6E4bPaiYzwVBn5IyaeU5C2EDKuJAWWUYK69TRNac4fadVijO6suTRbBPWwb2tUWRkqcz7bJBsOqzRnCqyW5cYsPkcgs3uHGnkEEIgSkMjEiiCHrVGosJuyrFmKeU+HctYhgPwUk+sHnjckFbFAftQR4KzOith3TAzLEOltqXIoR+ovk6yVly1jH0BsGa/neW7JEXf0BFo/OlHy1hue1T7EjllMrP3lw6Ro234WtR65JzRPhpIojDqgJmOyu921bGMW8WB1hhmX3R//uiNkgmVprbbqD0CkpNYZtWL+djki2iYG9uXyVdDltwTtDeEOdvxyhACTWb5Oi1jv6Tq+OdFZN0eXLPssncBw994vyqCmAWG0N2rY8xN8dTT35i7C7QYFg9rPQMVrcxxluCTY3QNxFJED89rBM4tbnnEDxs11tHYmBdv/HQt0RXKqLld3FXx6lvZfdhan8Z2bSb5whE2OWzxarmV5/1VSv6l+SgDYTYx1N1JgDf1+309nNYj8daK9Y4ldgOyc4P9h69XqNeqVPfQ/li5NiSXA2BVDeZoVAQinowCdjPtbU8XKkNotb0zCdtSyNHdXw5vJKwfEZsKG1Kd9O7nOZuRSy4vRHCuYo0XiUzZ0nM+KJRGTo6pfFU2bkrCE4=
-    username: AgBFe8Jswol6vBtQ/GUJf0WFgdIrpKAQwZCq+wp43bW3SvA4B8WjK6aqEbF9UZ8ZRDN4K/JC/ohJ9KKINpTrIk5l+pwJ5SYeUcjJOfMzeiBtlhdQ4D12IynIYSPTS/k8XHlGTOWCzokIijR7VXrTw0/O0djenZFwqFiD2qZurlm1r8AJvNYPVZr7cX7R65GCu1io33vvgBWMcGpBnayvopknEvOjDTd6XHsa/f9cLuxZCjb+MhF/b25znoS3lqWPWcxC9vgSYrgLtl8NtQgAyWB7iX1yy/0sGAye2BPinafendTzLCvwGjkv/0Kz5KEcXQ8o8SIhwlmp7+UDTG/Hjd55216fOGGDLTCIsHoEk6r3iuS1t3WY0kp2l9rRmjirkNJzN3A5MhNWdyAVTUT2WqC5Sz/jiVS0wYLPkM8X8eF2pyKC3i+WjV1f/choUi3FVMzgCxJMnxbdfHjibVLJ9TvOgLFLF/BkkJiBq3LY9ubc50rq+fbxZuWFLCOzolUDgljDoIK4UZ/VxMUM6cHlntr89C3U0EDMClWaoEJl3bdNOeAdWpP25mHiNB6fSbbQ9lhK2/pQRUWbgAnh2S6QUnuGRk3apEADK91FO1Lq7SICE5SgScl0DIl7vtJ6IhvmSX0jT1r/VzGtcmox9gvk9ONmqZfeStdgGnDdgFDkaiBhLcXK9YgCziCNlzYrUArlZx7q6z9yJw==
-  template:
-    data: null
-    metadata:
-      creationTimestamp: null
-      name: dummy-credentials
-      namespace: default
-```
-
-Este *SealedSecret* contiene la información *sensible* encriptada, por lo que puede publicarse en GitHub o en cualquier otro sitio.
-
-Creamos el *SealedSecret* en Kubernetes usando `kubectl apply`:
-
-```bash
-$ k create -f sealed-dummy-credentials.yaml 
-sealedsecret.bitnami.com/dummy-credentials created
-```
-
-Validamos que el *secret* se ha creado en el *namespace* `default`:
-
-```bash
-$ k get secret dummy-credentials -o yaml
-apiVersion: v1
-data:
-  password: cGF0YXRh
-  username: YWRtaW4=
-kind: Secret
-metadata:
-  creationTimestamp: "2021-06-17T20:53:18Z"
-  managedFields:
-  ...
-    manager: controller
-    operation: Update
-    time: "2021-06-17T20:53:18Z"
-  name: dummy-credentials
-  namespace: default
-  ownerReferences:
-  - apiVersion: bitnami.com/v1alpha1
-    controller: true
-    kind: SealedSecret
-    name: dummy-credentials
-    uid: aa797c53-6341-4e55-9574-5904d0811dbe
-  resourceVersion: "352333"
-  uid: 165ae758-cefe-4e20-a023-0fcb1385cbe1
-type: Opaque
-```
-
-Podemos validar que el valor del campo `password: cGF0YXRh` corresponde con el valor con el que creamos el *secret*
-
-```bash
-$ echo -n cGF0YXRh | base64 -d
-patata
-```
-
-Además, del *secret*, en el *namespace* también se ha creado un CRD de tipo *SealedSecret*:
-
-```bash
-$ k get secrets,sealedsecrets -n default
-NAME                         TYPE                                  DATA   AGE
-secret/default-token-sj8mh   kubernetes.io/service-account-token   3      84d
-secret/dummy-credentials     Opaque                                2      25m
-
-NAME                                         AGE
-sealedsecret.bitnami.com/dummy-credentials   25m
-```
-
-Revisando el contenido del *SealedSecret*:
-
-```yaml
-$ k get secrets,sealedsecrets -n default
-NAME                         TYPE                                  DATA   AGE
-secret/default-token-sj8mh   kubernetes.io/service-account-token   3      84d
-secret/dummy-credentials     Opaque                                2      25m
-
-NAME                                         AGE
-sealedsecret.bitnami.com/dummy-credentials   25m
-operador@k3s:~$ k describe sealed-secret dummy-credentials 
-error: the server doesn't have a resource type "sealed-secret"
-operador@k3s:~$ k describe sealedsecret dummy-credentials 
-Name:         dummy-credentials
-Namespace:    default
-Labels:       <none>
-Annotations:  <none>
-API Version:  bitnami.com/v1alpha1
-Kind:         SealedSecret
-Metadata:
-  Creation Timestamp:  2021-06-17T20:53:18Z
-  Generation:          3
-  Managed Fields:
-    API Version:  bitnami.com/v1alpha1
-    Fields Type:  FieldsV1
-    fieldsV1:
-      f:spec:
-    Manager:      kubectl-create
-    Operation:    Update
-    Time:         2021-06-17T20:53:18Z
-    API Version:  bitnami.com/v1alpha1
-    Fields Type:  FieldsV1
-    fieldsV1:
-      f:metadata:
-        f:annotations:
-          .:
-          f:kubectl.kubernetes.io/last-applied-configuration:
-      f:spec:
-        f:encryptedData:
-        f:template:
-    Manager:         kubectl-client-side-apply
-    Operation:       Update
-    Time:            2021-06-17T21:00:04Z
-  Resource Version:  352873
-  UID:               aa797c53-6341-4e55-9574-5904d0811dbe
-Spec:
-  Encrypted Data:
-    Password:  AgAf9ESoYVSWTl6FKfOq+W61+LWP75NpfiPogiOgOBa04A2dtC8hxxaSjnh7T209pABBHJiWCMBnUv8yILGVL+MGD7iCcogdaD+3G7zS8ucn8zUe4SCx3kuzkOfsfylUIw08qaKVFO/9Oc6qoA2mV1Olc5FAm5AcGg0pppFq1Y18L22dfD0By5BA0cAl+rCp210e2X93r1CfCqWBvFMFEKQHRJ4dnp5CXicOg1vxYh+r65shUkfWvhcLd1rZfIiLWC38Z8pxppgXQlD8/o6zqPit+Pvub+OmhR+vq3k6JBtLCAmnicUjTMqc+tMqfHdq0TLZDoN+KtScPt+0BOrzgVbAqBxvh3VMZCWjL9Oo8JtEcca23gZB4kNrrETcOF0Eldl+Q3WvqKDK+mRB7YlkgOnu6brpxvRBgcjjavtPyxQjdLp+WAghKA0yh0iTZ+IjA5vFSZhIhfLhF25YJWCL85Bt/GBfoxDKD4Nd1BlTEd4OPxgtIw05MCkDHdLt1v8n/JwTPx98msZiyj7GmJe6gxfrYu8vH6xbxUkpOsupF/mLbiMICGodfaRTWnpmqP/BLrPu0+UxFXiYcbAYL+P1BbWK4xACY/p4Y0I2Jbp7KUifMvln4+bP7G2owmglkq9nGDfTdJhascANJ5jQjLogo5DBrpxmkI/unRK6R/PUuuf8ZEuu2VPLyEJFa9SFmCXZC+tr0fbZGec=
-    Username:  AgBGh7PiA9e4/Rcxi7irZXC9BiGdW2oZBVI1K18uZ1mChnRLb9kajIZZhNqHCTEj9yubd1qHNeYnWWVm1elHY7uiI4CHV/ixDCcT1gbVHTBJWb4008cffjMtT7eLku+jDdAPF3sospJrHKFxZYWFlOpxfmc8jj9lTkdKktN8Er5lLWJ8imK8YvjffBePsDoKgDGpt93x1px45K6udP+AENNpWYmHIzQns6F3eLX9LPD0xlWNGEijLhwt1LY8U7llcFGpaN26CDgva02dMwvVgmhgAT2MQWD1KqqFFn08bVu7aiYc3efTgijbtbZE5r06C0u02HTDn8l2dqmR5joauEE7FvRuOCg8lOTDgpZUC7bDMPZxTJ0/6w9qS2+9vQXN/AT+bDLtD5h/GoxSCUQYlkMUbTfU8TLE9yv7WyVtNgNRjA0g2FuomrHbaZZaOw5e6EbLYKcBwQJ3g57gHsoYBpnwRaWcQmeeNd/wtpWjd/NsttKosNiqgKXKiotPGdiexMdmdzN238/QpRmgU0Wv3r0xAQbqNOZrVhwZtD+ZcgRgF4Tu2QhaZA8vSpL/FU0zbZ/tePpEXLvrqEr2lHpQtdefZpXIaiR9xD5VMqkmn9zahdC2B6xI8O8RBAAU0iZU9TOK+uL/ffbwml7hJeqJ591S3ra1qHeNTnk39bhsjsZNjQVqVWZntrsWLdOzpT9ZQAw38kZaKQ==
-  Template:
-    Metadata:
-      Labels:
-        Classification:  top-secret
-      Name:              dummy-credentials
-      Namespace:         default
-Events:
-  Type    Reason    Age                From            Message
-  ----    ------    ----               ----            -------
-  Normal  Unsealed  16m (x3 over 26m)  sealed-secrets  SealedSecret unsealed successfully
-```
-
-### Actualización del *Secret*
-
-Para actualizar el contenido del *secret* (por ejemplo, añadir una etiqueta):
-
-1. Editamos el fichero `dummy-credentials.yaml` (o lo obtenemos consultando la API de Kubernetes `k get secret -o yaml`).
-1. *Sellamos* el secreto
-1. (Subimos el *SealedSecret* al repositorio de código)
-1. Aplicamos el *SealedSecret* usando `k apply -f`
+Redirigiendo la salida del comando anterior a un fichero, podemos crear *SealedSecrets* en entornos sin conectividad con el clúster.
