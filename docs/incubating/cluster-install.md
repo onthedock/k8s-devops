@@ -117,3 +117,5 @@ El flujo para desplegar aplicaciones sería algo como:
 
 - primero, desplegamos los componentes de la aplicación de forma manual, vía `kubectl` o con *Helm*. (Sobre este clúster o sobre un clúster más sencillo, de desarrollo o sobre este mismo clúster, en un *namespace* de desarrollo)
 - una vez validado el proceso de instalación, configuración, etc..., generar la aplicación en ArgoCD para que se despliegue automáticamente en plan GitOps.
+
+Para personalizar la instalación de *charts* de terceros, un opción es generar una *umbrella chart* y colocar la *chat* que queremos desplegar y un fichero *values.yaml* que sobrescribe los valores por defecto de la *chart* original.
