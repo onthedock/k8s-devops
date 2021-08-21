@@ -35,7 +35,7 @@ En el *script* de instalación de **k3sup** es donde se indica el número de ser
 
 Antes de instalar aplicaciones en el clúster, habría que instalar una *StorageClass* y así eliminar la dependencia de [`local-path`](https://github.com/rancher/local-path-provisioner/blob/master/README.md#usage), que es la que usa K3s por defecto.
 
-En [Volumes and Storage](https://rancher.com/docs/k3s/latest/en/storage/) se indica que K3s soporta Longhorn (AMD64 y ARM64 (experimental)).
+En [Volumes and Storage](https://rancher.com/docs/k3s/latest/en/storage/) se indica que K3s soporta [Longhorn](https://longhorn.io/docs/) (AMD64 y ARM64 (experimental)).
 
 Probablemente la mejor manera de tener Longhorn instalado tras la creación del clúster sea usar la capacidad de K3s de *autoinstalar* los *manifests* en la carpeta `/var/lib/rancher/k3s/server/manifests`, como se indica en [Helm](https://rancher.com/docs/k3s/latest/en/helm/).
 
@@ -93,3 +93,27 @@ Forwarding from 127.0.0.1:8080 -> 8000
 Forwarding from [::1]:8080 -> 8000
 ...
 ```
+
+> #ToDo -> Configurar un *Ingress* para el *Dashboard* de Longhorn.
+
+## Siguientes pasos
+
+Ahora tenemos el clúster preparado, pero vacío. El siguiente paso es empezar a instalar las aplicaciones.
+
+Una opción es instalar ArgoCD. Una vez listo ArgoCD, desplegamos el *custom resource* que define una aplicación en ArgoCD, que básicamente indica de dónde obtener los ficheros necesarios para desplegar la aplicación (*manifests* o *Helm Charts*) y dónde deben desplegarse.
+
+Quizás la mejor opción es que los ficheros de definición de esas aplicaciones también se encuentren en GitHub (todavía tengo que mirar cómo organizarlos, si un repositorio por aplicación o diferentes "carpetas" por aplicación en el repo). De esa forma, la instalación de las aplicaciones en un "clúster vacío" siempre partirían de la última versión guardada en GitHub. Con este método, también podría elegir qué aplicacines instalar, simplemente, configurando el CR de la aplicación en ArgoCD para que se desplieque automáticamente...
+
+Para hacer pruebas, sin la dependencia de GitHub, puedo usar el mismo mecanismo, pero apuntando a un repositorio "local" con Gitea, desplegado en el clúster antes de "publicarlo" en el repo de GitHub.
+
+Otra opción sería usar ArgoCD para desplegar Gitea en el clúster y desplegar las aplicaciones desde ahí; sin embargo, tras desplegar Gitea, está vacío y debería, de algún modo, realizar el clonado de los CRs de ArgoCD para subirlos a Gitea... Por tanto, si al final del día debo pasar siempre por GitHub, me parece más *limpio* que todo lo "publicado" esté en GitHub.
+
+Eso significa que tengo que avanzar en la línea de:
+
+- automatizar la instalación de ArgoCD (que seguramente se puede desplegar como una *Helm Chart*)
+- aprender cómo desplegar aplicaciones usando los *custom resources* de ArgoCD.
+
+El flujo para desplegar aplicaciones sería algo como:
+
+- primero, desplegamos los componentes de la aplicación de forma manual, vía `kubectl` o con *Helm*. (Sobre este clúster o sobre un clúster más sencillo, de desarrollo o sobre este mismo clúster, en un *namespace* de desarrollo)
+- una vez validado el proceso de instalación, configuración, etc..., generar la aplicación en ArgoCD para que se despliegue automáticamente en plan GitOps.
