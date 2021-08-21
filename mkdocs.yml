@@ -10,27 +10,25 @@ nav:
       - Instalación:                                          platform/k3d/instalacion.md
       - Crear un clúster:                                     platform/k3d/crear-cluster.md
   - DevOps:
-    - Documentación como código:
+    - ArgoCD:
+      - Despliegue:                                           devops/argocd/argocd.md
+      - Acceso a la consola:                                  devops/argocd/acceso-consola.md
+      - Nueva aplicación:                                     devops/argocd/nueva-aplicacion.md
+    - Tekton:            
+      - Tekton:                                               devops/tekton/overview.md
+      - Despliegue de Tekton:                                 devops/tekton/deploy-tekton.md
+      - CI/CD con Tekton:                                     devops/tekton/first-workflow.md
+    - Documentación como código:  
       - Prueba de concepto con MkDocs:                        devops/doc-as-code/poc.md
-      - ArgoCD:
-        - Despliegue:                                         devops/argocd/argocd.md
-        - Acceso a la consola:                                devops/argocd/acceso-consola.md
-        - Nueva aplicación:                                   devops/argocd/nueva-aplicacion.md
-      - Tekton:          
-        - Tekton:                                             devops/tekton/overview.md
-        - Despliegue de Tekton:                               devops/tekton/deploy-tekton.md
-        - CI/CD con Tekton:                                   devops/tekton/first-workflow.md
-      - Documentación como código:
-        - Prueba de concepto con MkDocs:                      devops/doc-as-code/poc.md
-      - Helm:
-        - Helm Secrets:                                       devops/helm/helm-secrets.md
-        - Gitea:
-          - Analisis de la Chart para Gitea:                  devops/helm/gitea/gitea-analisis.md
-          - Instalación de la Chart para Gitea :              devops/helm/gitea/gitea-instalacion.md
-      - Sealed Secrets:
-        - Gestión de secretos:                                devops/sealed-secrets/sealed-secrets.md
-        - Instalación:                                        devops/sealed-secrets/instalacion.md
-        - Crear SealedSecrets con kubeseal:                   devops/sealed-secrets/crear-sealed-secret.md
+    - Helm:  
+      - Helm Secrets:                                         devops/helm/helm-secrets.md
+      - Gitea:  
+        - Analisis de la Chart para Gitea:                    devops/helm/gitea/gitea-analisis.md
+        - Instalación de la Chart para Gitea :                devops/helm/gitea/gitea-instalacion.md
+    - Sealed Secrets:  
+      - Gestión de secretos:                                  devops/sealed-secrets/sealed-secrets.md
+      - Instalación:                                          devops/sealed-secrets/instalacion.md
+      - Crear SealedSecrets con kubeseal:                     devops/sealed-secrets/crear-sealed-secret.md
   - Monitoring:
     - Despliegue de Prometheus:                               monitoring/prometheus.md
     - Componentes de Prometheus:                              monitoring/prometheus-componentes.md
