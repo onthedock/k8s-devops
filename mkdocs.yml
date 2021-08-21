@@ -21,7 +21,7 @@ nav:
     - Documentación como código:  
       - Prueba de concepto con MkDocs:                        devops/doc-as-code/poc.md
     - Helm:  
-      - Helm Secrets:                                         devops/helm/helm-secrets.md
+      - Generar Secrets en Helm:                              devops/helm/helm-secrets.md
       - Gitea:  
         - Analisis de la Chart para Gitea:                    devops/helm/gitea/gitea-analisis.md
         - Instalación de la Chart para Gitea :                devops/helm/gitea/gitea-instalacion.md
