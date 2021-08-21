@@ -65,6 +65,8 @@ nav:
   - Mkdocs:
     - Configuración básica:                                   mkdocs/basic-setup.md
     - Servidor de desarrollo:                                 mkdocs/servidor-de-desarrollo.md
+  - Incubating:
+    - Instalación del clúster:                                incubating/cluster-install.md
   - Referencias:                                              referencias.md
 
 # Repo Information
