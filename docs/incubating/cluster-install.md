@@ -229,6 +229,10 @@ Para desplegar una aplicación usando ArgoCD, tenemos que crear un *custom resou
 
 Para configurar de forma declarativa una aplicación en ArgoCD, se usa el *CR* `Application`:
 
+> El *namespace* en el que se despliega la aplicación debe existir previamente en el clúster.
+
+En el siguiente ejemplo, desplegamos la aplicación `guestbook` desde el repositorio de Kubernetes:
+
 ```yaml hl_lines="2"
 apiVersion: argoproj.io/v1alpha1
 kind: Application
