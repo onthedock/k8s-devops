@@ -8,8 +8,6 @@ El fichero `Vagrantfile` es un bucle que genera tantas máqunas como se indiquen
 
 Las máquinas usan la imagen `ubuntu/focal64` y establecen el `hostname`y la IP `192.168.1.101-192.168.192.1.10#{i}`.
 
-> Quizás sería mejor especificar la IP como `192.168.1.#{100+i}`, lo que permitiría cualquier número de nodos entre 1 y 154, mientras que ahora sólo se permiten 9 nodos, con `i` entre 1 y 9.
-
 Las máquinas virtuales tienen 1vCPU y 1024 MB de RAM.
 
 El fichero `Vagrantfile` también tienen vario *scripts* que realizan la configuración en las máquinas provisionadas:
