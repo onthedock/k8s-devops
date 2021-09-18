@@ -192,7 +192,6 @@ spec:
 Revisando con detalle el objeto generado por `kubectl apply --dry-run=client` vemos que es de tipo `kind: List`; aplicando el fichero directamente desde la CLI, funciona, pero parece que no acaba de funcionar cuando se tiene que *autodesplegar* como `addon` por K3s.
 
 ```yaml
-# DESPUES
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
@@ -215,6 +214,16 @@ Como puede observarse, los elementos limitados al *namespace* reciben la clave `
 ## Aplicaciones
 
 > Sigo avanzando, con el despligue manual de ArgoCD hasta que pueda volver a dedicarle algo de tiempo y ver porqué falla...
+
+> Para establecer la contraseña `argocdadmin`:
+
+  ```bash
+  kubectl -n argocd patch secret argocd-secret \
+      -p '{"stringData": {
+        "admin.password": "$2a$10$iF4kFuR9l9EqPhvuyVYg8.iIHTyjQPfbh9.K0ZsL9fDWb91pvcySG",
+        "admin.passwordMtime": "'$(date +%FT%T%Z)'"
+      }}'
+  ```
 
 Para desplegar una aplicación usando ArgoCD, tenemos que crear un *custom resource* que describa la aplicación a desplegar. El *cr* define de dónde obtener los *manifests* o la *Helm Chart*.
 
