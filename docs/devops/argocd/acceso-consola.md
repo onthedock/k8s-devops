@@ -27,7 +27,7 @@ En primer lugar hay que encriptar la contraseña seleccionada usando `bcrypt`.
 
 > [Debian no proporciona capacidad de encriptar usando `bcrypt`](https://packages.debian.org/buster/bcrypt) debido a este [bug #700758 - bcrypt: Bcrypt exposes patterns in data, it is broken](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=700758).
 >
-> Puedes usar una herramienta online como [Bcrypt-Generator.com](https://bcrypt-generator.com/) o [Bcrypt password generator](https://www.browserling.com/tools/bcrypt).
+> Puedes usar una herramienta online como [Bcrypt password generator](https://www.browserling.com/tools/bcrypt).
 
 Para usar una contraseña definida por el usuario para acceder a Argo CD, hay que *parchear* el *secret* `argocd-secret`:
 
