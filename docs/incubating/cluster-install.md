@@ -52,7 +52,9 @@ local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsu
 longhorn               driver.longhorn.io      Delete          Immediate              true                   7m9s
 ```
 
-En la documentación de Kubernetes [](https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/#changing-the-default-storageclass) tenemos instrucciones sobre cómo convertir la *StorageClass* `longhorn` en la *StorageClass* por defecto del clúster.
+> #ToDo Automatizar la configuración de la *storageClass* Longhorn por defecto en el clúster.
+
+En la documentación de Kubernetes [Changing de default storage class](https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/#changing-the-default-storageclass) tenemos instrucciones sobre cómo convertir la *StorageClass* `longhorn` en la *StorageClass* por defecto del clúster.
 
 Para evitar errores, la documentación recomienda primero eliminar la anotación de la *StorageClass* por defecto y después, añadir la anotación a la nueva *StorageClass*:
 
@@ -255,4 +257,3 @@ spec:
 ```
 
 Los *custom resources* de tipo `Application` de ArgoCD se despliegan en el *namespace* `argocd` (o donde se haya desplegado ArgoCD).
-
