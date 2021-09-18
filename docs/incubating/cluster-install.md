@@ -252,7 +252,7 @@ spec:
 
 Todas las aplicaciones pueden estar en el mismo repositorio, ya que en el campo `path` se puede indicar en qué *carpeta* dentro del repositorio. También podemos especifica la `targetRevision: HEAD`, por si queremos desplegar una *revision* concreta, por ejemplo una rama correspondiente a una PR (supongo).
 
-Hay un par de cosas a tener en cuenta; por un lado el tema del *finalizer*, para que al borrar la aplicación en ArgoCD se borren todos los recursos asociados:
+Hay un par de cosas a tener en cuenta; por un lado el tema del *finalizer*. Por defecto, al borrar una aplicación de ArgoCD **[no se realiza el borrado de los recursos definidos](https://argoproj.github.io/argo-cd/operator-manual/declarative-setup/#applications)**; si queremos que se realice el borrado en cascada, tenemos que añadir como *finalizer* a ArgoCD:
 
 ```yaml
 metadata:
