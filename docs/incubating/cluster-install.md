@@ -270,3 +270,87 @@ spec:
 ```
 
 Los *custom resources* de tipo `Application` de ArgoCD se despliegan en el *namespace* `argocd` (o donde se haya desplegado ArgoCD).
+
+Una vez definida la aplicación en el fichero `docs/incubating/argo-apps/guestbook.yaml`, la aplicamos y la aplicación se crea correctamente.
+
+Podemos revisar el estado de la aplicación mediante:
+
+```bash
+$ kubectl get apps -n argocd
+NAME   SYNC STATUS   HEALTH STATUS
+demo   OutOfSync     Missing
+```
+
+Como vemos, al no haber especificado la sincronización automática de la aplicación, ArgoCD detecta que la configuración definida en la aplicación y la existente en el clúster no están sincronzadas; de hecho, como lo único que hemos hecho ha sido crear un *custom resource* en ArgoCD, todavía no se ha *aplicado* nada en el clúster:
+
+```bash
+$ kubectl get pods -n demo-argocd
+No resources found in demo-argocd namespace.
+```
+
+En general, usamos ArgoCD para mantener sincronizado el estado de la aplicación definido en el repositorio de código y el desplegado en el clúster, por lo que vamos a configurar la sincronización automática en el fichero de definición de la aplicación en ArgoCD.
+
+Añadimos `.spec.syncPolicy.automated: {}`:
+
+```yaml
+spec:
+  syncPolicy:
+    automated: {}
+```
+
+Tras actualizar la definición de la aplicación en ArgoCD:
+
+```bash
+$ kubeclt get apps -n argocd
+NAME   SYNC STATUS   HEALTH STATUS
+demo   Synced        Healthy
+```
+
+Y si revisamos los recursos en el  *namespace*:
+
+```bash
+$ kubectl get pods -n demo-argocd
+NAME                           READY   STATUS    RESTARTS   AGE
+frontend-6c6d6dfd4d-t6h9n      1/1     Running   0          85s
+frontend-6c6d6dfd4d-mdw6w      1/1     Running   0          85s
+redis-master-f46ff57fd-7d44d   1/1     Running   0          86s
+redis-slave-7979cfdfb8-2z7tw   1/1     Running   0          84s
+frontend-6c6d6dfd4d-v92qw      1/1     Running   0          86s
+redis-slave-7979cfdfb8-45d7b   1/1     Running   0          85s
+```
+
+Por defecto, los cambios que se realicen en el clúster, aunque provocan que la aplicación quede *OutOfSync*, [no disparan una sincronización automática por parte de ArgoCD](https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing)]. Para que lo haga, añadimos la opción de *selfHeal: true*:
+
+```yaml hl_lines="4"
+spec:
+  syncPolicy:
+    automated:
+      selfHeal: true
+```
+
+Otra configuración interesante que está desactivada por defecto (por seguridad) es la de eliminar aquellos recursos que no se encuentran en los *manifests* del repositorio de Git. Si queremos habilitar que la desaparición de los elementos de Git provoque la eliminación de los recursos correspondientes en el clúster, debemos habilitar el *pruning*:
+
+```yaml hl_lines="5"
+spec:
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+```
+
+Para finalizar las opciones de configuración más habituales de las aplicaciones de ArgoCD, definimos un *finalizer*:
+
+```yaml
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+```
+
+En este caso, al eliminar la aplicación de ArgoCD, también se eliminan los recursos que la componen del clúster.
+
+```bash
+$ kubectl delete app demo -n argocd
+application.argoproj.io "demo" deleted
+$ kubectl get all -n demo-argocd
+No resources found in demo-argocd namespace.
+```

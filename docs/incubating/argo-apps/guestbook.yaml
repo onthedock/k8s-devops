@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+  source:
+    repoURL: https://github.com/kubernetes/examples.git
+    targetRevision: HEAD
+    path: guestbook/all-in-one
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo-argocd
