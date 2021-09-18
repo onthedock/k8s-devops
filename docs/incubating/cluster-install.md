@@ -237,17 +237,17 @@ En el siguiente ejemplo, desplegamos la aplicación `guestbook` desde el reposit
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: guestbook
+  name: guestbook-all-in-one
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    repoURL: https://github.com/kubernetes/examples.git
     targetRevision: HEAD
-    path: guestbook
+    path: guestbook/all-in-one
   destination:
     server: https://kubernetes.default.svc
-    namespace: guestbook
+    namespace: demo-argocd
 ```
 
 Todas las aplicaciones pueden estar en el mismo repositorio, ya que en el campo `path` se puede indicar en qué *carpeta* dentro del repositorio. También podemos especifica la `targetRevision: HEAD`, por si queremos desplegar una *revision* concreta, por ejemplo una rama correspondiente a una PR (supongo).
