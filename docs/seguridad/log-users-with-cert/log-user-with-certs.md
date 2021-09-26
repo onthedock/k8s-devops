@@ -1,12 +1,16 @@
 # Login de usuario con certificado en Kubernetes
 
-En Kubernetes no existe el concepto de usuario; sólo se confía en quien presente un certificado por su propia CA.
+En Kubernetes no existe el concepto de usuario; sólo se confía en quien presente un certificado firmado por la CA del clúster.
 
-Para obtener los certificados de la CA, lo más sencillo es acceder a un nodo *server*; los certificados (`ca.cert` y `ca.key`) se encuentran en `/etc/kubernetes/api/`.
+Para obtener los certificados de la CA, lo más sencillo es acceder a un nodo *server*; los certificados (`ca.cert` y `ca.key`) se encuentran en `/etc/kubernetes/pki/`.
 
-Para crear un nuevo usuario, debemos generar un certificado de usuario. Para ello, usamos **openssl**.
+> En K3s los certificados de la CA de Kubernetes se encuentran en `/var/lib/rancher/k3s/server/tls/` y se denominan `server-ca.crt` y `server-ca.key`.
 
-> En el documento de referencia, se monta un contenedor con `openssl` sobre Alpine:
+## Crear certificado de usuario
+
+Para autenticar un nuevo usuario, debemos generar un certificado para el usuario. Para ello, usamos **openssl**.
+
+> En el documento de referencia se genera un contenedor en Docker basado en Alpine en el que se instala `openssl` :
 >
 > ```bash
 > docker run -it -v ${PWD}:/work -w /work -v ${HOME}:/root/ --net host alpine sh
@@ -22,7 +26,7 @@ openssl genrsa -out bob.key 2048
 
 El siguiente paso es generar la *certificate signing requst (CSR)* y determinar a qué grupo pertenecerá el usuario.
 
-Suponemos que vamos a asignarle el rol `Shopping`.
+Suponemos que vamos a asignar al usuario al grupo `Shopping`. Este grupo viene determinado por el campo `O=` en el certificado generado.
 
 ```bash
 openssl req -new -key bob.key -out bob.csr -subj "/CN=Bob Smith/O=Shopping"
@@ -31,7 +35,8 @@ openssl req -new -key bob.key -out bob.csr -subj "/CN=Bob Smith/O=Shopping"
 Usando los certificados de la CA, firmamos el *CSR* del usuario y establecemos una fecha máxima de validez para el certificado.
 
 ```bash
-openssl x509 -req -in bob.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out bob.crt -days 1
+openssl x509 -req -in bob.csr -out bob.crt \
+  -CA ca.crt -CAkey ca.key -CAcreateserial  -days 1
 ```
 
 ## Crear el fichero *kubeconfig*
@@ -57,7 +62,7 @@ kubectl config set-credentials bob --client-certificate=bob.crt --client-key=bob
 ### Especificar el clúster
 
 ```bash
-kubectl config set-scluster <NOMBRE_DEL_CLUSTER> --server=<URL_DEL_CLUSTER> --certificate-authority=ca.crt --embed-certs=true
+kubectl config set-cluster <NOMBRE_DEL_CLUSTER> --server=<URL_DEL_CLUSTER> --certificate-authority=ca.crt --embed-certs=true
 ```
 
 ### Especificar el contexto
@@ -65,12 +70,33 @@ kubectl config set-scluster <NOMBRE_DEL_CLUSTER> --server=<URL_DEL_CLUSTER> --ce
 El contexto indica la combinación de usuario y clúster:
 
 ```bash
-kubectl config set-context --cluster=<NOMBRE_DEL_CLUSTER> --namespace=<DEFAULT_NAMESPACE> user=bob
+kubectl config set-context <NOMBRE_DEL_CONTEXTO> --cluster=<NOMBRE_DEL_CLUSTER> --namespace=<DEFAULT_NAMESPACE> --user=bob
 ```
+
+> En mi caso, al no haberse especificado ningún contexto como el contexto actual, kubectl intentaba conectar contra `localhost:6433`; la solución ha sido definir el contexto creado como el *current context*: `kubectl config use-context vagrant-k3s`.
+
+Establecemos el contexto recién creado como el contexto actual:
+
+```bash
+kubectl config use-context <NOMBRE_DE_CONTEXTO>
+```
+
+## Acceso al clúster
 
 Si Bob intenta acceder al clúster, obtendrá un error, ya que no tiene ningún permiso asociado (el rol `manage-pods` todavía no existe).
 
+```bash
+$ kubectl get pods
+error: You must be logged in to the server (Unauthorized)
+```
+
+> En mi caso el error que obtengo es `Unable to connect to the server: x509: certificate signed by unknown authority`. Comparando el valor del certificado almacenado en el fichero `~/.kube/config` funcional (para el usuario `admin`) y el generado mediante la guía, veo que en el caso de K3s, el certificado de la CA almacenado corresponde con el contenido de `server-ca.crt` (*encondeado* en base64)). Este es el certificado que hay que usar para firmar el certificado de usuario.
+
+### Permisos para el usuario
+
 Definimos el *role* `manage-pods` especificando las acciones que se pueden realizar sobre los recursos del clúster:
+
+> El namespace indicado debe existir en el clúster. En caso contrario, se recibe el mensaje de error `Error from server (NotFound): error when creating "manage-pods-role.yaml": namespaces "shopping" not found`.
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1

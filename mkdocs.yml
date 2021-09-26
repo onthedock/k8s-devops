@@ -47,6 +47,7 @@ nav:
       - Uso de KubeLinter:                                    seguridad/kube-linter/usando-kube-linter.md
     - OpenLDAP:           
       - Despliegue de OpenLDAP:                               seguridad/openldap/despliegue-de-openldap.md
+    - Login usuarios con certiicados:                         seguridad/log-users-with-cert/log-user-with-certs.md
   - Conceptos de Kubernetes:
     - Descripción general:                                    kubernetes/descripcion-general.md
     - Comandos útiles:                                        kubernetes/comandos-utiles.md
