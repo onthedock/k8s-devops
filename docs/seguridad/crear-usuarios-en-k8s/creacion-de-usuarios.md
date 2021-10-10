@@ -1,4 +1,4 @@
-# Crear usuarios adicionales en Kubernetes
+# Crear usuarios en Kubernetes (y en K3s)
 
 En Kubernetes no existe el concepto de usuario; sólo se confía en quien presente un certificado firmado por la CA del clúster.
 
