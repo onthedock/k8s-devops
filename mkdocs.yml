@@ -49,6 +49,7 @@ nav:
       - Despliegue de OpenLDAP:                               seguridad/openldap/despliegue-de-openldap.md
     - Creación de usuarios en K8s/K3s:
       - Creación de usuarios:                                 seguridad/crear-usuarios-en-k8s/creacion-de-usuarios.md
+      - (script) Creación de usuarios:                        seguridad/crear-usuarios-en-k8s/script-creacion-de-usuarios.md
   - Conceptos de Kubernetes:
     - Descripción general:                                    kubernetes/descripcion-general.md
     - Comandos útiles:                                        kubernetes/comandos-utiles.md
