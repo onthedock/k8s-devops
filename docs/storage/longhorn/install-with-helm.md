@@ -1,7 +1,7 @@
 # Instalación de Longhorn usando Helm
 
 Lanzamos la instalación de Longhorn usando Helm. Para ello usamos las instrucciones recogidas en la [documentación oficial (para la versión 1.2.2)](https://longhorn.io/docs/1.2.2/deploy/install/install-with-helm/):
-
+<!-- markdownlint-disable MD031-->
 1. Añadimos el repositorio de Helm para Longhorn:
    ```bash
    $ helm repo add longhorn https://charts.longhorn.io
