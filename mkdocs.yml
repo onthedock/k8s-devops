@@ -34,6 +34,8 @@ nav:
     - Componentes de Prometheus:                              monitoring/prometheus-componentes.md
     - Despliegue de Grafana:                                  monitoring/grafana.md
   - Storage:
+    - Longhorn:
+      - Instalación con Helm:                                 storage/longhorn/install-with-helm.md
     - MinIO:
       - Instalación de MinIO:                                 storage/minio/instalacion-de-minio.md
       - Uso del cliente de MinIO mc:                          storage/minio/uso-del-cliente-de-minio-mc.md
