@@ -53,6 +53,7 @@ nav:
       - Creación de usuarios:                                 seguridad/crear-usuarios-en-k8s/creacion-de-usuarios.md
       - (script) Creación de usuarios:                        seguridad/crear-usuarios-en-k8s/script-creacion-de-usuarios.md
       - Creación de usuarios (método nativo de Kubernetes):   seguridad/crear-usuarios-en-k8s/crear-usuario-en-k8s-metodo-nativo-de-k8s.md
+      - (script) Creación de usuario (método nativo de k8s):  seguridad/crear-usuarios-en-k8s/script-automatiza-crear-usuario-metodo-nativo-k8s.md
   - Conceptos de Kubernetes:
     - Descripción general:                                    kubernetes/descripcion-general.md
     - Comandos útiles:                                        kubernetes/comandos-utiles.md
