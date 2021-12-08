@@ -35,7 +35,8 @@ nav:
     - Despliegue de Grafana:                                  monitoring/grafana.md
   - Storage:
     - Longhorn:
-      - Instalación (manual) con Helm:                        storage/longhorn/instalacion-longhorn-manualcon-helm.md
+      - Instalación (manual) con Helm:                        storage/longhorn/instalacion-longhorn-manual-con-helm.md
+      - Instalación (script) con Helm:                        storage/longhorn/instalacion-longhorn-script-con-helm.md
     - MinIO:
       - Instalación de MinIO:                                 storage/minio/instalacion-de-minio.md
       - Uso del cliente de MinIO mc:                          storage/minio/uso-del-cliente-de-minio-mc.md
