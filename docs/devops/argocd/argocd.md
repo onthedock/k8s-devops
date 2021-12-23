@@ -21,7 +21,7 @@ $ kubectl apply -f argocd-namespace.yaml
 namespace/argocd created
 ```
 
-> La creación del *Namespace* desde el *script* `argocd_deploy.sh` se realiza mediante `kubectl create namespace argocd` (si el *Namespace* no existe). 
+> La creación del *Namespace* desde el *script* `argocd_deploy.sh` se realiza mediante `kubectl create namespace argocd` (si el *Namespace* no existe).
 
 ### Uso de un *namespace* diferente a `argocd`
 
