@@ -2,7 +2,7 @@
 
 [Argo CD](https://argoproj.github.io/argo-cd/) es una herramienta **declarativa** de *despliegue continuo* para Kubernetes.
 
-> Este documento se ha probado con la versión 2.1.7 de ArgoCD.
+> Este documento se ha probado con la versión 2.2.1 de ArgoCD.
 
 ## Espacio de nombres
 
@@ -38,8 +38,8 @@ Siguiendo las instrucciones de la documentación [Getting Started](https://argop
 
 Descargamos el fichero como referencia y revisamos las versiones de las diferentes imágenes que se instalan:
 
-* `ghcr.io/dexidp/dex:v2.27.0` [DEX](https://dexidp.io/) - A Federated OpenID Connect Provider
-* `quay.io/argoproj/argocd:v2.1.7` [Argo CD](https://argoproj.github.io/argo-cd/) - A declarative, GitOps continuous delivery tool for Kubernetes
+* `ghcr.io/dexidp/dex:v2.30.0` [DEX](https://dexidp.io/) - A Federated OpenID Connect Provider
+* `quay.io/argoproj/argocd:v2.2.1` [Argo CD](https://argoproj.github.io/argo-cd/) - A declarative, GitOps continuous delivery tool for Kubernetes
 * `redis:6.2.4-alpine` [Redis](https://redis.io/) - Open source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker
 
 > Para no modificar el fichero original generado por el proyecto de ArgoCD, dejamos el parámetro *imagePullPolicy* como *Always*, aunque sería interesante cambiarlo por `IfNotPresent`.
@@ -47,7 +47,7 @@ Descargamos el fichero como referencia y revisamos las versiones de las diferent
 Desplegamos ArgoCD:
 
 ```bash
-kubectl -n argocd apply -f argocd-install-stable-v2.1.7.yaml 
+kubectl -n argocd apply -f argocd-install-stable-v2.2.1.yaml 
 ```
 
 Al cabo de unos minutos:
@@ -107,7 +107,7 @@ Como vemos, la variable `ARGOCD_SERVER_INSECURE` se puede configurar a través d
 
 > La documentación oficial no está actualizada y sigue indicando que debe añadirse el *flag* `--insecure` al comando `argocd-server`: [Ingress Configuration: Traefik (v2.2)](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#traefik-v22).
 
-La versión 2.1.17 de ArgoCD permite realizar la configuración de `argocd-server` a través de la variable de entorno `ARGOCD_SERVER_INSECURE` obtenida del *ConfigMap* `argocd-cmd-params-cm`.
+La versión 2.2.1 de ArgoCD permite realizar la configuración de `argocd-server` a través de la variable de entorno `ARGOCD_SERVER_INSECURE` obtenida del *ConfigMap* `argocd-cmd-params-cm`.
 
 Todas las opciones de configuración que pueden incluirse en el *ConfigMap* se encuentran en [argocd-cmd-params-cm.yaml](https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml)
 
