@@ -12,6 +12,7 @@ nav:
   - DevOps:
     - ArgoCD:
       - Despliegue:                                           devops/argocd/argocd.md
+      - Despliegue (script):                                  devops/argocd/argocd-deployment-script.md
       - Acceso a la consola:                                  devops/argocd/acceso-consola.md
       - Nueva aplicación:                                     devops/argocd/nueva-aplicacion.md
     - Tekton:            
