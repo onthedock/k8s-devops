@@ -15,6 +15,7 @@ nav:
       - Despliegue (script):                                  devops/argocd/argocd-deployment-script.md
       - Acceso a la consola:                                  devops/argocd/acceso-consola.md
       - Nueva aplicación:                                     devops/argocd/nueva-aplicacion.md
+      - Nueva aplicación (despliegue declarativo usando Helm): devops/argocd/nueva-aplicacion-declarativa-helm.md
     - Tekton:            
       - Tekton:                                               devops/tekton/overview.md
       - Despliegue de Tekton:                                 devops/tekton/deploy-tekton.md
