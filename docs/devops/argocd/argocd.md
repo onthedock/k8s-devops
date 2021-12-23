@@ -1,6 +1,8 @@
 # ArgoCD
 
-[Argo CD](https://argoproj.github.io/argo-cd/) es una herramienta **declarativa** de *despliegue contínuo* para Kubernetes.
+[Argo CD](https://argoproj.github.io/argo-cd/) es una herramienta **declarativa** de *despliegue continuo* para Kubernetes.
+
+> Este documento se ha probado con la versión 2.1.7 de ArgoCD.
 
 ## Espacio de nombres
 
@@ -15,9 +17,11 @@ metadata:
 Creamos el *namespace*:
 
 ```bash
-$ kubectl apply -f argocd.yaml
+$ kubectl apply -f argocd-namespace.yaml
 namespace/argocd created
 ```
+
+> La creación del *Namespace* desde el *script* `argocd_deploy.sh` se realiza mediante `kubectl create namespace argocd` (si el *Namespace* no existe). 
 
 ### Uso de un *namespace* diferente a `argocd`
 
@@ -34,65 +38,27 @@ Siguiendo las instrucciones de la documentación [Getting Started](https://argop
 
 Descargamos el fichero como referencia y revisamos las versiones de las diferentes imágenes que se instalan:
 
-* quay.io/dexidp/dex:v2.25.0 [DEX](https://dexidp.io/) - A Federated OpenID Connect Provider
-* argoproj/argocd:v1.8.1 [Argo CD](https://argoproj.github.io/argo-cd/) - A declarative, GitOps continuous delivery tool for Kubernetes
-* redis:5.0.10-alpine [Redis](https://redis.io/) - Open source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker
+* `ghcr.io/dexidp/dex:v2.27.0` [DEX](https://dexidp.io/) - A Federated OpenID Connect Provider
+* `quay.io/argoproj/argocd:v2.1.7` [Argo CD](https://argoproj.github.io/argo-cd/) - A declarative, GitOps continuous delivery tool for Kubernetes
+* `redis:6.2.4-alpine` [Redis](https://redis.io/) - Open source (BSD licensed), in-memory data structure store, used as a database, cache, and message broker
 
-Modificamos el parámetro *imagePullPolicy* para cambiarlo a *IfNotPresent* (en vez de *Always*).
+> Para no modificar el fichero original generado por el proyecto de ArgoCD, dejamos el parámetro *imagePullPolicy* como *Always*, aunque sería interesante cambiarlo por `IfNotPresent`.
 
-Añdimos el contenido del fichero de instalación de ArgoCD al fichero despliegue (para tener unificada la creación del *namespace* y la del despliegue de la herramienta):
+Desplegamos ArgoCD:
 
 ```bash
-$ kubectl -n argocd apply -f docs/argocd/deploy/argocd.yaml 
-namespace/argocd unchanged
-Warning: apiextensions.k8s.io/v1beta1 CustomResourceDefinition is deprecated in v1.16+, unavailable in v1.22+; use apiextensions.k8s.io/v1 CustomResourceDefinition
-customresourcedefinition.apiextensions.k8s.io/applications.argoproj.io created
-customresourcedefinition.apiextensions.k8s.io/appprojects.argoproj.io created
-serviceaccount/argocd-application-controller created
-serviceaccount/argocd-dex-server created
-serviceaccount/argocd-redis created
-serviceaccount/argocd-server created
-role.rbac.authorization.k8s.io/argocd-application-controller created
-role.rbac.authorization.k8s.io/argocd-dex-server created
-role.rbac.authorization.k8s.io/argocd-redis created
-role.rbac.authorization.k8s.io/argocd-server created
-clusterrole.rbac.authorization.k8s.io/argocd-application-controller created
-clusterrole.rbac.authorization.k8s.io/argocd-server created
-rolebinding.rbac.authorization.k8s.io/argocd-application-controller created
-rolebinding.rbac.authorization.k8s.io/argocd-dex-server created
-rolebinding.rbac.authorization.k8s.io/argocd-redis created
-rolebinding.rbac.authorization.k8s.io/argocd-server created
-clusterrolebinding.rbac.authorization.k8s.io/argocd-application-controller created
-clusterrolebinding.rbac.authorization.k8s.io/argocd-server created
-configmap/argocd-cm created
-configmap/argocd-gpg-keys-cm created
-configmap/argocd-rbac-cm created
-configmap/argocd-ssh-known-hosts-cm created
-configmap/argocd-tls-certs-cm created
-secret/argocd-secret created
-service/argocd-dex-server created
-service/argocd-metrics created
-service/argocd-redis created
-service/argocd-repo-server created
-service/argocd-server created
-service/argocd-server-metrics created
-deployment.apps/argocd-dex-server created
-deployment.apps/argocd-redis created
-deployment.apps/argocd-repo-server created
-deployment.apps/argocd-server created
-statefulset.apps/argocd-application-controller created
+kubectl -n argocd apply -f argocd-install-stable-v2.1.7.yaml 
 ```
 
 Al cabo de unos minutos:
 
 ```bash
-$ kubectl -n argocd get pods
-NAME                                  READY   STATUS    RESTARTS   AGE
-argocd-redis-6fb68d9df5-6c5wg         1/1     Running   0          4m53s
-argocd-server-547d9bb879-tx2pb        1/1     Running   0          4m53s
-argocd-dex-server-86dc95dfc5-rxn6w    1/1     Running   0          4m53s
-argocd-application-controller-0       1/1     Running   0          4m53s
-argocd-repo-server-5fb8df558f-5drdq   1/1     Running   0          4m53s
+$ kubectl get deploy -n argocd
+NAME                 READY   UP-TO-DATE   AVAILABLE   AGE
+argocd-redis         1/1     1            1           13m
+argocd-dex-server    1/1     1            1           13m
+argocd-repo-server   1/1     1            1           13m
+argocd-server        1/1     1            1           13m
 ```
 
 ## Acceso a la consola de ArgoCD
@@ -110,13 +76,73 @@ argocd-server           ClusterIP   10.43.57.82     <none>        80/TCP,443/TCP
 argocd-server-metrics   ClusterIP   10.43.98.38     <none>        8083/TCP                     6m56s
 ```
 
-Para exponer la consola usando un *Ingress*, la documentación de Argo CD proporciona [instrucciones para configurar Traefik (v2.2)](https://argoproj.github.io/argo-cd/operator-manual/ingress/#traefik-v22) donde se indica:
+Para exponer la consola usando un *Ingress*, debemos activar el acceso *inseguro* (deshabilitando TLS).
 
-> The API server should be run with TLS disabled. Edit the argocd-server deployment to add the --insecure flag to the argocd-server command.
+### Configuración mediante variables de entorno
 
-Es necesario modificar el *deployment* del *argocd-server* para incluir `--insecure` al comando ejecutado:
+En la versión 2.1.17 de ArgoCD, podemos observar cómo se han incluido variables de entorno para realizar la configuración del servidor `argocd-server`, en vez de tener que modificar el fichero *original* de despliegue de ArgoCD.
 
 ```yaml
+...
+containers:
+  - command:
+    - argocd-server
+    env:
+    - name: ARGOCD_SERVER_INSECURE
+      valueFrom:
+        configMapKeyRef:
+          key: server.insecure
+          name: argocd-cmd-params-cm
+          optional: true
+    - name: ARGOCD_SERVER_BASEHREF
+      valueFrom:
+        configMapKeyRef:
+          key: server.basehref
+          name: argocd-cmd-params-cm
+          optional: true
+...
+```
+
+Como vemos, la variable `ARGOCD_SERVER_INSECURE` se puede configurar a través de un *ConfigMap*.
+
+> La documentación oficial no está actualizada y sigue indicando que debe añadirse el *flag* `--insecure` al comando `argocd-server`: [Ingress Configuration: Traefik (v2.2)](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#traefik-v22).
+
+La versión 2.1.17 de ArgoCD permite realizar la configuración de `argocd-server` a través de la variable de entorno `ARGOCD_SERVER_INSECURE` obtenida del *ConfigMap* `argocd-cmd-params-cm`.
+
+Todas las opciones de configuración que pueden incluirse en el *ConfigMap* se encuentran en [argocd-cmd-params-cm.yaml](https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml)
+
+```yaml hl_lines="12"
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cmd-params-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cmd-params-cm
+  namespace: argocd
+data:
+  ## Server properties
+  # Run server without TLS
+  server.insecure: "true"  
+```
+
+Tras realizar la modificación, debemos reiniciar el *Deployment* para que los contenedores se creen de nuevo con la variable de entorno definida:
+
+```bash
+kubectl -n argocd rollout restart deploy argocd-server
+```
+
+### Configuración mediante el *flag* `--insecure`
+
+**Es preferible realizar la configuración a través del *ConfigMap* en vez de modificar el fichero de despliegue para incluir el *flag*.**
+
+La documentación de Argo CD proporciona [instrucciones para configurar Traefik (v2.2)](https://argoproj.github.io/argo-cd/operator-manual/ingress/#traefik-v22) donde se indica:
+
+> The API server should be run with TLS disabled. Edit the `argocd-server` deployment to add the `--insecure` flag to the argocd-server command.
+
+Es necesario modificar el *deployment* de *argocd-server* para incluir `--insecure` al comando ejecutado:
+
+```yaml hl_lines="7"
 ...
       containers:
       - command:
@@ -129,6 +155,14 @@ Es necesario modificar el *deployment* del *argocd-server* para incluir `--insec
         name: argocd-server
 ...
 ```
+
+Es necesario reiniciar los pods de `argocd-server` para que los cambios sean efectivos:
+
+```bash
+kubectl -n argocd rollout restart deploy argocd-server
+```
+
+## Ingress de acceso a la consola de ArgoCD
 
 Podemos configurar Traefik usando un *ingress* o mediante el CRD *IngressRoute* proporcionado por Traefik.
 
@@ -157,55 +191,18 @@ spec:
                 number: 80
 ```
 
-Al aplicar los cambios introducidos en el fichero y aplicarlos:
+Desplegamos el *Ingress*:
 
 ```bash
- k -n argocd apply -f argocd.yaml 
-namespace/argocd unchanged
-Warning: apiextensions.k8s.io/v1beta1 CustomResourceDefinition is deprecated in v1.16+, unavailable in v1.22+; use apiextensions.k8s.io/v1 CustomResourceDefinition
-customresourcedefinition.apiextensions.k8s.io/applications.argoproj.io unchanged
-customresourcedefinition.apiextensions.k8s.io/appprojects.argoproj.io unchanged
-serviceaccount/argocd-application-controller unchanged
-serviceaccount/argocd-dex-server unchanged
-serviceaccount/argocd-redis unchanged
-serviceaccount/argocd-server unchanged
-role.rbac.authorization.k8s.io/argocd-application-controller unchanged
-role.rbac.authorization.k8s.io/argocd-dex-server unchanged
-role.rbac.authorization.k8s.io/argocd-redis unchanged
-role.rbac.authorization.k8s.io/argocd-server unchanged
-clusterrole.rbac.authorization.k8s.io/argocd-application-controller unchanged
-clusterrole.rbac.authorization.k8s.io/argocd-server unchanged
-rolebinding.rbac.authorization.k8s.io/argocd-application-controller unchanged
-rolebinding.rbac.authorization.k8s.io/argocd-dex-server unchanged
-rolebinding.rbac.authorization.k8s.io/argocd-redis unchanged
-rolebinding.rbac.authorization.k8s.io/argocd-server unchanged
-clusterrolebinding.rbac.authorization.k8s.io/argocd-application-controller unchanged
-clusterrolebinding.rbac.authorization.k8s.io/argocd-server unchanged
-configmap/argocd-cm unchanged
-configmap/argocd-gpg-keys-cm unchanged
-configmap/argocd-rbac-cm unchanged
-configmap/argocd-ssh-known-hosts-cm unchanged
-configmap/argocd-tls-certs-cm configured
-secret/argocd-secret unchanged
-service/argocd-dex-server unchanged
-service/argocd-metrics unchanged
-service/argocd-redis unchanged
-service/argocd-repo-server unchanged
-service/argocd-server unchanged
-service/argocd-server-metrics unchanged
-deployment.apps/argocd-dex-server unchanged
-deployment.apps/argocd-redis unchanged
-deployment.apps/argocd-repo-server unchanged
-deployment.apps/argocd-server configured
-statefulset.apps/argocd-application-controller unchanged
-ingress.networking.k8s.io/argocd created
+kubectl -n argocd apply -f argocd-ingress-traefik.yaml 
 ```
 
 > Puede ser necesario realizar un *rollout restart* del *deployment* `argocd-server`: `kubectl -n argocd rollout restart deploy argocd-server`.
 
 En resumen, se ha modificado:
 
-* La definición del *deployment* `argocd-server` para incluir el *flag* `--insecure`
+* Se ha añadido la configuración `server.insecure: "true"` en el *ConfigMap* `argocd-cmd-params-cm`.
+* (Es posible conseguir el mismo resultado mediante la inclusión del *flag* `--insecure` en el *deployment* `argocd-server`)
 * La creación del recurso *Ingress*
 
 Tras estas modificaciones, podemos acceder a la consola de Argo CD a través de `http://argocd.dev.lab`.
