@@ -15,7 +15,9 @@ nav:
       - Despliegue (script):                                  devops/argocd/argocd-deployment-script.md
       - Acceso a la consola:                                  devops/argocd/acceso-consola.md
       - Nueva aplicación:                                     devops/argocd/nueva-aplicacion.md
-      - Nueva aplicación (despliegue declarativo usando Helm): devops/argocd/nueva-aplicacion-declarativa-helm.md
+      - ArgoCD Applications:
+        -  Sealed Secrets (Helm):                             devops/argocd/apps/sealed-secrets.md
+        -  MinIO (Helm):                                      devops/argocd/apps/minio.md
     - Tekton:            
       - Tekton:                                               devops/tekton/overview.md
       - Despliegue de Tekton:                                 devops/tekton/deploy-tekton.md
@@ -62,7 +64,6 @@ nav:
     - Comandos útiles:                                        kubernetes/comandos-utiles.md
     - Pods:                                                   kubernetes/pod.md
     - Volumes:                                                kubernetes/volumes.md
-  
   - Apps básicas:
     - MySQL:
       - MySQL (sólo 1 réplica):                               appsbasicas/mysql/mysql-1-replica.md
