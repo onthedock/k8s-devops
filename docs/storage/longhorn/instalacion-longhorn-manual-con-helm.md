@@ -105,12 +105,55 @@ longhorn (default)   driver.longhorn.io      Delete          Immediate          
 local-path           rancher.io/local-path   Delete          WaitForFirstConsumer   false                  46d
 ```
 
+## Publicación de la consola via Ingress
+
+Longhorn proporciona una consola con la que visualizar el almacenamiento del clúster.
+
+El servicio que publica la consola es `longhorn-frontend`:
+
+```bash
+$ kubeclt get svc -n longhorn-system
+NAME                TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)     AGE
+longhorn-frontend   ClusterIP   10.43.238.195   <none>        80/TCP      15d
+longhorn-backend    ClusterIP   10.43.150.204   <none>        9500/TCP    15d
+csi-attacher        ClusterIP   10.43.167.71    <none>        12345/TCP   15d
+csi-provisioner     ClusterIP   10.43.168.38    <none>        12345/TCP   15d
+csi-resizer         ClusterIP   10.43.93.16     <none>        12345/TCP   15d
+csi-snapshotter     ClusterIP   10.43.202.163   <none>        12345/TCP   15d
+```
+
+Definimos un *Ingress* para publicar el acceso a la consola de Longhorn en `http://longhorn.dev.lab`:
+
+```yaml
+---
+apiVersion: networking.k8s.io/v1 # Kubernetes 1.19+
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernets.io/ingress.class: traefik
+  name: longhorn-console
+  namespace: longhorn-system
+spec:
+  rules:
+  - host: "longhorn.dev.lab"
+    http:
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: longhorn-frontend
+              port:
+                number: 80
+```
+
 ## Versiones
 
 ```bash
 $ kubectl version --short
-Client Version: v1.19.4
-Server Version: v1.19.16+k3s1
+Client Version: v1.22.3
+Server Version: v1.22.4+k3s1
 $ helm version --short
 v3.6.2+gee407bd
 $ helm -n longhorn-system list -o yaml
@@ -120,5 +163,5 @@ $ helm -n longhorn-system list -o yaml
   namespace: longhorn-system
   revision: "1"
   status: deployed
-  updated: 2021-11-11 18:28:33.36440462 +0100 CET
+  updated: 2021-12-08 13:34:37.472618044 +0100 CET
 ```

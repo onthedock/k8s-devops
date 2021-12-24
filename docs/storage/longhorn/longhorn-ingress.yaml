@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1 # Kubernetes 1.19+
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernets.io/ingress.class: traefik
+  name: longhorn-console
+  namespace: longhorn-system
+spec:
+  rules:
+  - host: "longhorn.dev.lab"
+    http:
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: longhorn-frontend
+              port:
+                number: 80
