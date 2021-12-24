@@ -1,4 +1,4 @@
-# Nueva aplicación (usando Helm)
+# Sealed Secrets (a partir de la Helm Chart)
 
 Vamos a desplegar *Sealed Secrets* usando la Helm Chart mediante una *application* de ArgoCD.
 
