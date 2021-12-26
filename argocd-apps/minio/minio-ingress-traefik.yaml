@@ -1,0 +1,31 @@
+---
+apiVersion: networking.k8s.io/v1 # Kubernetes 1.19+
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "false"
+    kubernets.io/ingress.class: traefik
+  name: minio
+  namespace: minio
+spec:
+  rules:
+  - host: "console.minio.dev.lab"
+    http:
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: minio-console
+              port:
+                number: 9001
+  - host: "api.minio.dev.lab"
+    http:
+      paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: minio
+              port:
+                number: 9000
