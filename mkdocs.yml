@@ -44,7 +44,7 @@ nav:
     - MinIO:
       - Instalación de MinIO:                                 storage/minio/instalacion-de-minio.md
       - Uso del cliente de MinIO mc (mediante Jobs):          storage/minio/uso-del-cliente-de-minio-mc.md
-      - Uso del cliente de MinIO mc:                          storage/minio/uso-del-cliente-de-minio-mc.md
+      - Uso del cliente de MinIO mc (CLI):                    storage/minio/uso-de-minio-client.md
     - Velero: 
       - Instalación de Velero:                                storage/backup/instalacion-de-velero.md
       - Crear copia de seguridad:                             storage/backup/crear-copia-de-seguridad.md
