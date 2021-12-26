@@ -1,4 +1,4 @@
-# Uso del cliente de MinIO **mc**
+# Uso del cliente de MinIO **mc** (usando un Job)
 
 `mc` es el *cliente* para interaccionar con Minio y los *buckets*.
 
