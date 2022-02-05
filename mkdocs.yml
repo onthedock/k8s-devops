@@ -18,8 +18,7 @@ nav:
       - ArgoCD Applications:
         - Sealed Secrets (Helm):                              devops/argocd/apps/sealed-secrets.md
         - MinIO (Helm):                                       devops/argocd/apps/minio.md
-        -  Sealed Secrets (Helm):                             devops/argocd/apps/sealed-secrets.md
-        -  MinIO (Helm):                                      devops/argocd/apps/minio.md
+        - Gitea-Bootstrap (Helm):                             devops/argocd/apps/gitea-bootstrap.md
     - Tekton:            
       - Tekton:                                               devops/tekton/overview.md
       - Despliegue de Tekton:                                 devops/tekton/deploy-tekton.md
