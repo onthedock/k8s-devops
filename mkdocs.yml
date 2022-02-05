@@ -16,6 +16,8 @@ nav:
       - Acceso a la consola:                                  devops/argocd/acceso-consola.md
       - Nueva aplicación:                                     devops/argocd/nueva-aplicacion.md
       - ArgoCD Applications:
+        - Sealed Secrets (Helm):                              devops/argocd/apps/sealed-secrets.md
+        - MinIO (Helm):                                       devops/argocd/apps/minio.md
         -  Sealed Secrets (Helm):                             devops/argocd/apps/sealed-secrets.md
         -  MinIO (Helm):                                      devops/argocd/apps/minio.md
     - Tekton:            
