@@ -25,6 +25,17 @@ resources:
 >
 > ![MinIO Volume en Longhorn](minio-volume-on-longhorn-console.png)
 
+Para desplegar en modo *standalone*, usamos el parámetro `mode` con el valor `standalone` para la *Helm Chart*; en el *CR* de `Application` en ArgoCD:
+
+```yaml
+#...
+  helm:
+    parameters:
+      - name: mode
+        value: standalone
+#...
+```
+
 ## Variables de entorno
 
 La documentación de MinIO ([MinIO `root` User](https://docs.min.io/minio/baremetal/security/minio-identity-management/user-management.html#minio-root-user)) indica que si las variables de entorno `MINIO_ROOT_USER` y `MINIO_ROOT_PASSWORD` no están definidas, se usa por defecto `minioadmin` tanto como nombre de usuario como contraseña para el usuario `root` de MinIO.
