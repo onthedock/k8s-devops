@@ -125,3 +125,9 @@ Podemos generar un nombre de usuario y una contraseña segura utilizando herrami
         name: minio-rootuser-secret
         namespace: minio
     ```
+
+### *Manifest* del *CR* de `Application`
+
+```yaml
+--8<-- "argocd-apps/minio/argocd-application-minio.yaml"
+```
