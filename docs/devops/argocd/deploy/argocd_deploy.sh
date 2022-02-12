@@ -44,7 +44,7 @@ done
 
 echo "[INFO] ArgoCD server deployed."
 
-echo "[INFO] Configuring insecure access (using ConfigMap)..."
+echo "[INFO] Configuring insecure access (no TLS) using ConfigMap..."
 kubectl apply -f argocd-cmd-params-cm.yaml
 kubectl -n argocd rollout restart deploy argocd-server
 
