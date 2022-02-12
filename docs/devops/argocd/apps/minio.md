@@ -61,6 +61,17 @@ Si usamos la CLI de *Helm*, establecemos el nombre del *Secret* existente median
 helm install --set existingSecret=my-minio-secret minio/minio
 ```
 
+En la instalación usando el *CR* de `Application` en ArgoCD, la configuración se realiza mediante:
+
+```yaml
+#...
+  helm:
+    parameters:
+      - name: existingSecret
+        value: minio-rootuser-secret
+#...
+```
+
 #### Generando `rootUser` y `rootPassword`
 
 Podemos generar un nombre de usuario y una contraseña segura utilizando herramientas comunes en Linux como `uuidgen`, `openssl`, `md5sum` y `base64` (o combinándolas).
