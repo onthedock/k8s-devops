@@ -26,4 +26,4 @@ El *manifest* del CRD `application` para el despliegue de Gitea es [^fichero_ins
 ---8<--- "argocd-apps/gitea/argocd-app-gitea.yaml"
 ```
 
-[^fichero_insertado]: Este es el fichero que se encuentra en la carpeta `/argocd-apps` del respositorio.
+[^fichero_insertado]: Este es el fichero que se encuentra en la carpeta `/argocd-apps` del repositorio.
