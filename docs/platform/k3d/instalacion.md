@@ -10,14 +10,20 @@ La instalación de **k3d** requiere tener instalado Docker.
 
 El proceso de instalación se detalla en [k3d.io](https://k3d.io/):
 
+> No es seguro instalar **nada** directamente desde internet. Revisa el contenido del script <https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh> o instala "a ciegas" por tu cuesta y riesgo.
+
 ```bash
-wget -q -O - https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+$ wget -q -O - https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+Preparing to install k3d into /usr/local/bin
+[sudo] password for operador: 
+k3d installed into /usr/local/bin/k3d
+Run 'k3d --help' to see what you can do with it.
 ```
 
 La versión instalada es:
 
 ```bash
 $ k3d --version
-k3d version v4.2.0
-k3s version v1.20.2-k3s1 (default)
+k3d version v5.4.9
+k3s version v1.25.7-k3s1 (default)
 ```
