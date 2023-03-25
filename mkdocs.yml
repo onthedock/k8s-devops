@@ -9,6 +9,8 @@ nav:
     - k3d:     
       - Instalación:                                          platform/k3d/instalacion.md
       - Crear un clúster:                                     platform/k3d/crear-cluster.md
+    - kubectl:
+      - Instalación:                                          platform/kubectl/instalacion.md
   - DevOps:
     - ArgoCD:
       - Despliegue:                                           devops/argocd/argocd.md
