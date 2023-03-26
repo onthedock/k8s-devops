@@ -9,10 +9,12 @@ nav:
     - k3d:     
       - Instalación:                                          platform/k3d/instalacion.md
       - Crear un clúster:                                     platform/k3d/crear-cluster.md
+      - Crear clúster como código:                            platform/k3d/cluster-as-code.md
+      - Validación registry en k3d:                           platform/k3d/registry.md
     - kubectl:
       - Instalación:                                          platform/kubectl/instalacion.md
     - Docker Engine:
-      - Instalación:                                         platform/docker/instalacion.md
+      - Instalación:                                          platform/docker/instalacion.md
   - DevOps:
     - ArgoCD:
       - Despliegue:                                           devops/argocd/argocd.md
