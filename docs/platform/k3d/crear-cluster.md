@@ -215,7 +215,7 @@ CONTAINER ID   IMAGE                            COMMAND                  CREATED
 8ce590b73979   registry:2                       "/entrypoint.sh /etc…"   40 minutes ago   Up 28 minutes   0.0.0.0:5000->5000/tcp            registry.localhost
 ```
 
-> Como no hemos configurado certificados para el *registry* desplegado en k3d, debemos configurar Docker para usarlo como *registro inseguro*: [Test an insecure registry
+> Como no hemos configurado certificados para el *registry* desplegado en k3d, debemos incluirlo en Docker como *registro inseguro*: [Test an insecure registry
 ](https://docs.docker.com/registry/insecure/)
 
 Desplegamos un contenedor con [nginx](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-docker/) localmente:
